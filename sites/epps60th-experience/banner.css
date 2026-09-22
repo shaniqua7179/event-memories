@@ -40,3 +40,41 @@
   .pollo-bg { top: calc(var(--bh) + 6rem); }
   .entrance { padding-top: calc(var(--bh) + 6rem + var(--vid) - 1rem); }
 }
+
+/* ---------- Seamless overlap: banner in front, the ballroom video tucked just beneath it ---------- */
+/* The overlap stops just above the Pollo.ai watermark (≈40px from the video's top on desktop, ≈10px on phones) so it stays visible. */
+:root { --overlap: 36px; }
+.pollo-bg {
+  top: calc(var(--bh) - var(--overlap));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) calc(var(--overlap) * 0.55), #000 var(--overlap), #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) calc(var(--overlap) * 0.55), #000 var(--overlap), #000 82%, transparent 100%);
+}
+/* The banner's own bottom fades softly into the video (no hard line) */
+.top-banner-wrap::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 22%; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(5, 5, 7, 0.55) 70%, rgba(5, 5, 7, 0.75));
+  -webkit-mask-image: radial-gradient(ellipse 70% 100% at 50% 100%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 100% at 50% 100%, #000 40%, transparent 100%);
+}
+.hero-actions { z-index: 7; }
+.entrance { padding-top: calc(var(--bh) - var(--overlap) + var(--vid) - 3rem); }
+
+/* Decorative seam: thin centered gold flourish + faint notes on the left (never over the watermark corner) */
+.seam-deco { position: absolute; z-index: 5; left: 0; right: 0; top: calc(var(--bh) - var(--overlap) - 12px); height: 70px; pointer-events: none; }
+.seam-flourish { position: absolute; left: 50%; transform: translateX(-50%); top: 2px; width: min(62vw, 900px); height: 24px; filter: drop-shadow(0 0 6px rgba(243, 217, 138, 0.6)); opacity: 0.75; }
+.seam-notes { position: absolute; left: clamp(1rem, 4vw, 4rem); top: -26px; width: clamp(130px, 14vw, 220px); height: auto; opacity: 0.35; filter: drop-shadow(0 0 6px rgba(243, 217, 138, 0.6)); animation: notes-drift 8s ease-in-out infinite; }
+@keyframes notes-drift { 50% { transform: translateY(-5px); opacity: 0.5; } }
+/* the gold button sits above the flourish, so drop the flourish on desktop where they'd meet */
+@media (min-width: 701px) { .seam-flourish { top: 18px; } }
+
+@media (max-width: 700px) {
+  :root { --overlap: 8px; }
+  .pollo-bg { top: calc(var(--bh) + 6rem - var(--overlap)); }
+  .seam-deco { top: calc(var(--bh) + 6rem - var(--overlap) - 14px); }
+  .seam-notes { width: 96px; top: -18px; }
+  .entrance { padding-top: calc(var(--bh) + 6rem - var(--overlap) + var(--vid) - 1rem); }
+}
+@media (prefers-reduced-motion: reduce) { .seam-notes { animation: none; } }
+/* The banner's last few pixels fade out over the overlap so the video shows through (no seam line) */
+.top-banner { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--overlap) - 18px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - var(--overlap) - 18px), transparent 100%); }
+.top-banner-wrap::after { display: none; }
