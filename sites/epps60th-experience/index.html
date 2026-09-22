@@ -3,34 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#06060b">
+<meta name="theme-color" content="#050507">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.5' stop-color='%23aab2bf'/%3E%3Cstop offset='1' stop-color='%23353a44'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3Cpath d='M4 32h56M32 4v56M8 18h48M8 46h48M18 8v48M46 8v48' stroke='%23000' stroke-opacity='.25' stroke-width='1.2'/%3E%3C/svg%3E">
 <title>Join the After Party · Oscar D. Epps, Sr. 60th Birthday</title>
-<meta name="description" content="Relive Dancing Through the Decades, Oscar D. Epps, Sr.'s 60th birthday celebration. See the photos and add your own.">
-<script>
-  if (!location.pathname.endsWith("/") && !/\.[a-z0-9]+$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search + location.hash);
-</script>
+<meta name="description" content="Oh, what a night. Join the After Party: relive Oscar D. Epps, Sr.'s 60th birthday celebration, see the photos and add your own.">
+<meta property="og:title" content="Join the After Party · Oscar D. Epps, Sr. 60th Birthday">
+<meta property="og:description" content="The party ended. The memories didn't. See the photos and add yours.">
+<meta property="og:image" content="/memories/experience/media/ball-desktop.jpg">
+<!-- All paths are absolute so this page works both here and as the epps60th.com homepage -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&family=Yellowtail&family=Parisienne&family=Cinzel:wght@500;600&display=swap">
-<link rel="preload" as="image" href="media/disco-desktop.jpg" media="(min-width: 701px)">
-<link rel="preload" as="image" href="media/disco-mobile.jpg" media="(max-width: 700px)">
-<link rel="stylesheet" href="experience.css">
-<link rel="stylesheet" href="after-party.css">
-<script src="../config.js"></script>
+<link rel="preload" as="image" href="/memories/experience/media/ball-desktop.jpg" media="(min-width: 701px)">
+<link rel="preload" as="image" href="/memories/experience/media/ball-mobile.jpg" media="(max-width: 700px)">
+<link rel="stylesheet" href="/memories/experience/experience.css">
+<link rel="stylesheet" href="/memories/experience/after-party.css">
+<link rel="stylesheet" href="/memories/experience/revision.css">
+<script src="/memories/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="../core.js"></script>
+<script src="/memories/core.js"></script>
 </head>
 <body>
 
-<!-- ===== The room: fixed layers behind (and light above) everything ===== -->
+<!-- ===== The room: fixed light behind (and reflections above) everything ===== -->
 <div class="room" aria-hidden="true">
   <div class="room-base"></div>
-  <video class="room-video" id="roomVideo" muted loop playsinline preload="none"></video>
-  <div class="glow g-magenta"></div>
-  <div class="glow g-violet"></div>
-  <div class="glow g-cyan"></div>
-  <div class="glow g-amber"></div>
+  <video class="room-sparkle" id="sparkleVideo" muted loop playsinline preload="none"></video>
+  <div class="glow g-gold"></div>
+  <div class="glow g-champagne"></div>
+  <div class="glow g-plum"></div>
+  <div class="glow g-blue"></div>
   <div class="beam beam-l"></div>
   <div class="beam beam-r"></div>
   <div class="sweep"></div>
@@ -43,44 +45,53 @@
 <main>
   <!-- ===== Scene 1 · The Entrance ===== -->
   <section class="entrance" id="entrance" aria-labelledby="heroTitle">
+    <!-- One disco-ball moment, at the top, partly out of frame -->
+    <div class="ball-wrap" aria-hidden="true">
+      <video id="ballVideo" muted loop playsinline preload="none"></video>
+    </div>
+
+    <!-- The dance floor: glossy black, a monogram projected in light, smoke rolling across -->
+    <div class="floor-gloss" aria-hidden="true"></div>
+    <div class="gobo" aria-hidden="true"><div class="gobo-disc"><span>E</span></div></div>
+    <canvas class="fog" id="fog" aria-hidden="true"></canvas>
+
     <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
 
-    <div class="dancefloor" aria-hidden="true"><canvas id="floorCanvas" width="28" height="14"></canvas></div>
-
     <header class="topbar reveal" style="--d: 0.4s">
-      <a class="mark" href="#entrance"><span class="mark-name">Oscar D. Epps, Sr.</span><span class="mark-sub">60th Birthday Celebration</span></a>
+      <a class="mark" href="/"><span class="mark-name">Oscar D. Epps, Sr.</span><span class="mark-sub">60th Birthday Celebration</span></a>
       <nav class="toplinks" aria-label="Sections">
         <a href="#floor" data-go="floor">Photos</a>
-        <a href="../?tab=speeches" data-go="videos">Videos</a>
-        <a href="../?tab=notes">Messages</a>
-        <a class="btn-gold-line" href="../?share=1">Add Your Moment</a>
+        <a href="/memories/?tab=speeches" data-go="videos">Videos</a>
+        <a href="/memories/?tab=notes">Messages</a>
+        <a class="btn-gold-line" href="/memories/?share=1">Add Your Moment</a>
       </nav>
     </header>
 
     <p class="note note-l" aria-hidden="true">Good Music<br>Great People<br>Unforgettable Moments</p>
     <p class="note note-r" aria-hidden="true">Different Decades.<br>Same Joy.</p>
-    <p class="note note-b" aria-hidden="true">Same Pastor.<br>New Memories.</p>
 
     <div class="hero" id="hero">
-      <p class="join reveal" style="--d: 0.9s">Join the</p>
-      <h1 class="script-title" id="heroTitle"><span class="glitter">After Party</span>
-        <svg class="swoosh" viewBox="0 0 600 40" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#e9edf2"/><stop offset=".45" stop-color="#ffffff"/><stop offset=".6" stop-color="#f3d98a"/><stop offset="1" stop-color="#c9a13b"/></linearGradient></defs><path d="M8 30 C 160 12, 380 8, 592 18" fill="none" stroke="url(#sw)" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <p class="opener reveal" style="--d: 0.7s">Oh, what a night.</p>
+      <p class="join reveal" style="--d: 1.0s">Join the</p>
+      <h1 class="script-title" id="heroTitle" aria-label="Join the After Party"><span class="glitter" aria-hidden="true">After Party</span>
+        <svg class="swoosh" viewBox="0 0 600 40" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#e9edf2"/><stop offset=".5" stop-color="#ffffff"/><stop offset=".72" stop-color="#f3d98a"/><stop offset="1" stop-color="#c9a13b"/></linearGradient></defs><path d="M8 30 C 160 12, 380 8, 592 18" fill="none" stroke="url(#sw)" stroke-width="3.2" stroke-linecap="round"/></svg>
         <span class="sparkle s1" aria-hidden="true"></span><span class="sparkle s2" aria-hidden="true"></span><span class="sparkle s3" aria-hidden="true"></span><span class="sparkle s4" aria-hidden="true"></span>
       </h1>
       <p class="decades reveal" style="--d: 2.3s">Dancing Through the Decades</p>
-      <p class="tagline reveal" style="--d: 2.7s">The party ended. The memories didn't.</p>
-      <div class="hero-actions reveal" style="--d: 3.1s">
+      <p class="tagline reveal" style="--d: 2.6s">The party ended. The memories didn't.</p>
+      <div class="hero-actions reveal" style="--d: 3.0s">
         <button class="btn-neon" id="enterBtn">Enter the Experience <span aria-hidden="true">›</span></button>
+        <a class="btn-ghost-gold" href="/memories/?share=1">Add Your Moment</a>
       </div>
-      <nav class="quick reveal" style="--d: 3.5s" aria-label="Jump to">
+      <nav class="quick reveal" style="--d: 3.4s" aria-label="Jump to">
         <button type="button" data-go="floor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg><b>See</b><span>the photos</span></button>
         <button type="button" data-go="videos"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg><b>Watch</b><span>the videos</span></button>
-        <a href="../?tab=notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><b>Read</b><span>the messages</span></a>
+        <a href="/memories/?tab=notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><b>Read</b><span>the messages</span></a>
         <button type="button" data-go="share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5l6 6-6 6M20 11H9a5 5 0 0 0-5 5v3"/></svg><b>Share</b><span>your moments</span></button>
       </nav>
     </div>
 
-    <button class="scroll-cue reveal" style="--d: 3.2s" id="scrollCue" aria-label="Scroll to the Memory Floor"><span></span></button>
+    <button class="scroll-cue" id="scrollCue" aria-label="Scroll to the Memory Floor"><span></span></button>
   </section>
 
   <!-- ===== Scene 2 · The Memory Floor ===== -->
@@ -89,6 +100,7 @@
       <p class="kicker">Step onto</p>
       <h2 class="chrome-sub" id="floorTitle">The Memory Floor</h2>
       <p class="floor-count" id="floorCount">&nbsp;</p>
+      <p class="floor-hint">Drag or swipe a row to look around · tap any photo to open it</p>
     </header>
 
     <div class="tracks" id="tracks"></div>
@@ -96,13 +108,13 @@
 
     <div class="floor-cta">
       <p>Were you there? Your pictures belong on this floor.</p>
-      <a class="btn-chrome" href="../?share=1">Add Your Moment</a>
-      <a class="text-link" href="../">See every photo, message &amp; speech</a>
+      <a class="btn-neon" href="/memories/?share=1">Add Your Moment</a>
+      <a class="text-link" href="/memories/">See every photo, message &amp; speech</a>
     </div>
   </section>
 </main>
 
-<a class="share-fab" id="shareFab" href="../?share=1" aria-label="Add your moment"><span class="fab-ball" aria-hidden="true"></span><span class="fab-text">Add your moment</span></a>
+<a class="share-fab" id="shareFab" href="/memories/?share=1" aria-label="Add your moment"><span class="fab-ball" aria-hidden="true"></span><span class="fab-text">Add your moment</span></a>
 
 <!-- ===== Viewer (same window) ===== -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
@@ -124,6 +136,6 @@
   </div>
 </div>
 
-<script src="experience.js"></script>
+<script src="/memories/experience/experience.js"></script>
 </body>
 </html>

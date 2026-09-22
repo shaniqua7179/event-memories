@@ -35,7 +35,7 @@ const devices = [
       scrollW: document.documentElement.scrollWidth, vw: innerWidth,
       tracks: document.querySelectorAll(".track").length, tiles: document.querySelectorAll(".tile").length,
       count: document.getElementById("floorCount").textContent, fab: document.getElementById("shareFab").classList.contains("show"),
-      video: document.getElementById("roomVideo").currentSrc.split("/").pop(), playing: !document.getElementById("roomVideo").paused
+      video: document.getElementById("ballVideo").currentSrc.split("/").pop(), playing: !document.getElementById("ballVideo").paused, sparkle: (document.getElementById("sparkleVideo")||{}).currentSrc||"", sharpTiles: [...document.querySelectorAll(".tile img")].filter(i=>/mid|full/.test(i.currentSrc)).length
     }));
     // Open the viewer on a tile
     await page.evaluate(() => document.querySelector(".track.front .tile, .tile").click());

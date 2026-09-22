@@ -14,18 +14,20 @@
   const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const root = document.documentElement;
 
-  /* ---------- Background video: phone or desktop cut, poster first, never on data-saver / reduced motion ---------- */
-  const poster = isPhone ? "media/disco-mobile.jpg" : "media/disco-desktop.jpg";
-  document.querySelector(".room-base").style.setProperty("--poster", `url("${poster}")`);
-  const video = $("roomVideo");
+  /* ---------- The disco ball: one video, at the top of the entrance only; poster first; never on data-saver / reduced motion ---------- */
+  const MEDIA = "/memories/experience/media/";
+  const ballWrap = document.querySelector(".ball-wrap");
+  const video = $("ballVideo");
+  ballWrap.style.setProperty("--ball-poster", `url("${MEDIA}${isPhone ? "ball-mobile.jpg" : "ball-desktop.jpg"}")`);
   if (!reduceMotion && !saveData) {
-    video.src = isPhone ? "media/disco-mobile.mp4" : "media/disco-desktop.mp4";
-    video.addEventListener("playing", () => { video.classList.add("is-playing"); document.querySelector(".room").classList.add("video-on"); }, { once: true });
+    video.src = MEDIA + (isPhone ? "ball-mobile.mp4" : "ball-desktop.mp4");
+    video.addEventListener("playing", () => { video.classList.add("is-playing"); ballWrap.classList.add("video-on"); }, { once: true });
     const tryPlay = () => video.play().catch(() => {});
+    let entranceOnScreen = true;
+    new IntersectionObserver(([e]) => { entranceOnScreen = e.isIntersecting; entranceOnScreen && !document.hidden ? tryPlay() : video.pause(); }).observe(document.getElementById("entrance"));
+    document.addEventListener("visibilitychange", () => (document.hidden || !entranceOnScreen ? video.pause() : tryPlay()));
+    document.addEventListener("touchstart", tryPlay, { once: true, passive: true }); // iOS low-power mode
     tryPlay();
-    document.addEventListener("visibilitychange", () => (document.hidden ? video.pause() : tryPlay()));
-    // iOS low-power mode blocks autoplay until the first touch
-    document.addEventListener("touchstart", tryPlay, { once: true, passive: true });
   }
 
   /* ---------- Camera flash ---------- */
@@ -54,7 +56,7 @@
     const cv = $("spots"), ctx = cv.getContext("2d");
     let W = 0, H = 0, dpr = 1, list = [];
     const count = reduceMotion ? 0 : isPhone ? 34 : lowPower ? 55 : 90;
-    const colors = ["255,255,255", "255,255,255", "215,240,255", "255,150,215", "190,170,255", "160,240,255", "255,215,160"];
+    const colors = ["255,255,255", "255,255,255", "255,250,240", "255,236,200", "246,220,160", "255,244,220", "200,210,255", "190,160,255"];
     const sprites = colors.map((c) => {
       const s = document.createElement("canvas"); s.width = s.height = 64;
       const g = s.getContext("2d"), grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
@@ -133,6 +135,60 @@
     };
   })();
 
+  /* ---------- Floor smoke: soft puffs drifting and swelling across the bottom of the entrance ---------- */
+  const fog = (() => {
+    const cv = $("fog");
+    if (!cv || reduceMotion) return { step() {} };
+    const ctx = cv.getContext("2d");
+    const scale = 0.5; // fog is soft, so half resolution is plenty and much cheaper
+    let W = 0, H = 0, puffs = [];
+    const count = isPhone ? 9 : lowPower ? 12 : 18;
+    function make(anyX) {
+      const r = rand(0.18, 0.42) * Math.max(W, 600);
+      return { x: anyX ? rand(-0.1, 1.1) * W : -r, y: H * rand(0.55, 1.05), r, vx: rand(8, 22) * scale, a: rand(0.05, 0.12), ph: rand(0, 6.28), warm: Math.random() < 0.6 };
+    }
+    function resize() {
+      const b = cv.getBoundingClientRect();
+      W = Math.max(1, Math.round(b.width * scale)); H = Math.max(1, Math.round(b.height * scale));
+      cv.width = W; cv.height = H;
+      puffs = Array.from({ length: count }, () => make(true));
+    }
+    resize();
+    addEventListener("resize", resize);
+    let acc = 0;
+    return {
+      step(t, dt) {
+        acc += dt;
+        if (acc < 1 / 30) return; // 30 frames a second is smooth for smoke
+        const step = acc; acc = 0;
+        ctx.clearRect(0, 0, W, H);
+        ctx.globalCompositeOperation = "lighter";
+        for (const p of puffs) {
+          p.x += p.vx * step;
+          if (p.x - p.r > W) Object.assign(p, make(false));
+          const swell = 1 + Math.sin(t * 0.00025 + p.ph) * 0.12;
+          const y = p.y + Math.sin(t * 0.0003 + p.ph) * 8;
+          const r = p.r * swell;
+          const g = ctx.createRadialGradient(p.x, y, 0, p.x, y, r);
+          const c = p.warm ? "255,236,205" : "235,238,245";
+          g.addColorStop(0, `rgba(${c},${p.a})`); g.addColorStop(0.55, `rgba(${c},${p.a * 0.45})`); g.addColorStop(1, `rgba(${c},0)`);
+          ctx.fillStyle = g;
+          ctx.fillRect(p.x - r, y - r, r * 2, r * 2);
+        }
+      }
+    };
+  })();
+
+  /* ---------- Sharp photos: pick the right size for each tile (thumbnail, ~1200px, or full) ---------- */
+  function srcsetFor(p) {
+    const w = p.width || 1600, h = p.height || 1200, long = Math.max(w, h);
+    const at = (edge) => Math.round(w * Math.min(1, edge / long));
+    const parts = [`${api.thumbUrl(p)} ${at(480)}w`];
+    if (p.mid_path) parts.push(`${api.midUrl(p)} ${at(1200)}w`);
+    parts.push(`${api.fullUrl(p)} ${w}w`);
+    return parts.join(", ");
+  }
+
   /* ---------- Load the real photos from the existing app layer ---------- */
   let media = []; // photos + dance-floor videos (speeches stay in their own section)
   let speechCount = 0;
@@ -149,8 +205,8 @@
     { x: "73%", y: "77%", w: "8vw", r: -4, depth: 0.25, far: true }
   ];
   const slotsPhone = [
-    { x: "-7%", y: "10%", w: "34vw", r: -8, depth: 0.4, far: false },
-    { x: "72%", y: "11%", w: "32vw", r: 7, depth: 0.3, far: false },
+    { x: "-8%", y: "8%", w: "30vw", r: -8, depth: 0.4, far: false },
+    { x: "76%", y: "8%", w: "28vw", r: 7, depth: 0.3, far: false },
     { x: "-16%", y: "50%", w: "26vw", r: 6, depth: 0.2, far: true },
     { x: "88%", y: "47%", w: "24vw", r: -5, depth: 0.25, far: true }
   ];
@@ -164,7 +220,7 @@
       el.className = "fphoto" + (s.far ? " far" : "");
       el.style.setProperty("--x", s.x); el.style.setProperty("--y", s.y); el.style.setProperty("--w", s.w);
       el.style.setProperty("--r", `${s.r}deg`); el.style.setProperty("--gd", `${i * 1.3}s`);
-      el.innerHTML = `<div class="print${s.caption ? " captioned" : ""}"><img src="${esc(api.thumbUrl(p))}" alt="" decoding="async">${s.caption ? `<span class="print-cap">${s.caption}</span>` : ""}</div>`;
+      el.innerHTML = `<div class="print${s.caption ? " captioned" : ""}"><img src="${esc(api.thumbUrl(p))}" srcset="${esc(srcsetFor(p))}" sizes="${s.w}" alt="" decoding="async">${s.caption ? `<span class="print-cap">${s.caption}</span>` : ""}</div>`;
       el.querySelector(".print").style.setProperty("--torn", tornEdge());
       layer.appendChild(el);
       floaters.push({ el, s, ph: rand(0, Math.PI * 2), ax: rand(8, 20), ay: rand(10, 24), speed: rand(0.00018, 0.00032), shown: false, delay: 1600 + i * 260 });
@@ -254,22 +310,23 @@
 
   /* ---------- Scene 2 · the Memory Floor: independent rows drifting in opposite directions ---------- */
   const rowsCfg = isPhone
-    ? [{ h: "clamp(130px, 21vh, 190px)", speed: 16, dir: 1, cls: "back" },
-       { h: "clamp(170px, 29vh, 260px)", speed: 24, dir: -1, cls: "front" },
-       { h: "clamp(120px, 19vh, 170px)", speed: 12, dir: 1, cls: "back" }]
-    : [{ h: "clamp(150px, 22vh, 230px)", speed: 18, dir: 1, cls: "back" },
-       { h: "clamp(210px, 33vh, 360px)", speed: 30, dir: -1, cls: "front" },
-       { h: "clamp(140px, 20vh, 210px)", speed: 13, dir: 1, cls: "back" },
-       { h: "clamp(180px, 27vh, 300px)", speed: 23, dir: -1, cls: "mid" }];
+    ? [{ h: "clamp(130px, 20vh, 180px)", speed: 13, dir: 1, cls: "back" },
+       { h: "clamp(190px, 31vh, 280px)", speed: 20, dir: -1, cls: "front" },
+       { h: "clamp(120px, 18vh, 165px)", speed: 10, dir: 1, cls: "back" }]
+    : [{ h: "clamp(150px, 22vh, 230px)", speed: 15, dir: 1, cls: "back" },
+       { h: "clamp(220px, 34vh, 380px)", speed: 24, dir: -1, cls: "front" },
+       { h: "clamp(140px, 20vh, 210px)", speed: 11, dir: 1, cls: "back" },
+       { h: "clamp(180px, 27vh, 300px)", speed: 19, dir: -1, cls: "mid" }];
   const rows = [];
   let floorVisible = false;
 
-  function tileHtml(p) {
+  function tileHtml(p, rowPx) {
     const ar = Math.min(1.7, Math.max(0.62, (p.width || 4) / (p.height || 3)));
+    const tileW = Math.round(rowPx * ar);
     const video = p.kind === "video";
     const dur = p.duration_ms ? `${Math.floor(p.duration_ms / 60000)}:${String(Math.round((p.duration_ms % 60000) / 1000)).padStart(2, "0")}` : "Video";
     return `<button class="tile" data-id="${esc(p.id)}" style="--ar:${ar.toFixed(3)};--rot:${rand(-2.4, 2.4).toFixed(2)}deg;--ty:${rand(-10, 10).toFixed(0)}px" aria-label="Open ${video ? "video" : "photo"} shared by ${esc(p.name)}">
-      <img src="${esc(api.thumbUrl(p))}" alt="" loading="lazy" decoding="async">${video ? `<span class="vtag">${dur}</span>` : ""}</button>`;
+      <img src="${esc(api.thumbUrl(p))}" srcset="${esc(srcsetFor(p))}" sizes="${tileW}px" alt="" loading="lazy" decoding="async" draggable="false">${video ? `<span class="vtag">${dur}</span>` : ""}</button>`;
   }
   function buildFloor() {
     const tracks = $("tracks");
@@ -294,7 +351,7 @@
         width += pxH * Math.min(1.7, Math.max(0.62, (p.width || 4) / (p.height || 3))) + 20;
         if (items.length > 60) break;
       }
-      const set = items.map(tileHtml).join("");
+      const set = items.map((p) => tileHtml(p, pxH)).join("");
       track.innerHTML = `<div class="belt"><div class="set">${set}</div><div class="set" aria-hidden="true">${set}</div></div>`;
       track.querySelectorAll(".set[aria-hidden] .tile").forEach((b) => (b.tabIndex = -1));
       const row = { track, belt: track.querySelector(".belt"), setW: 0, off: rand(0, 400), cfg, speedNow: cfg.speed, speedTarget: cfg.speed };
@@ -305,36 +362,89 @@
         track.addEventListener("mouseenter", () => (row.speedTarget = cfg.speed * 0.1));
         track.addEventListener("mouseleave", () => (row.speedTarget = cfg.speed));
       }
+      enableDrag(row);
       rows.push(row);
     });
     addEventListener("resize", () => rows.forEach((r) => (r.setW = r.track.querySelector(".set").getBoundingClientRect().width)));
   }
+  let suppressClick = false;
+  function enableDrag(row) {
+    const t = row.track;
+    let startX = 0, startY = 0, lastX = 0, lastT = 0, vel = 0, down = false, dragging = false;
+    t.addEventListener("pointerdown", (e) => {
+      if (e.button > 0) return;
+      down = true; dragging = false; startX = lastX = e.clientX; startY = e.clientY; lastT = performance.now(); vel = 0;
+    });
+    t.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!dragging) {
+        if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return; // vertical swipes still scroll the page
+        dragging = true; t.classList.add("dragging");
+        try { t.setPointerCapture(e.pointerId); } catch {}
+      }
+      const now = performance.now(), step = e.clientX - lastX;
+      // Moving the belt: positive offset moves content left for rows drifting left, right for rows drifting right
+      row.off = ((row.off + (row.cfg.dir > 0 ? step : -step)) % row.setW + row.setW) % row.setW;
+      vel = step / Math.max(1, now - lastT) * 1000; lastX = e.clientX; lastT = now;
+      row.speedNow = 0;
+    });
+    const end = () => {
+      if (!down) return;
+      down = false;
+      if (dragging) {
+        suppressClick = true; setTimeout(() => (suppressClick = false), 60);
+        t.classList.remove("dragging");
+        // fling: carry the swipe's momentum, then settle back into the gentle drift
+        row.speedNow = Math.max(-900, Math.min(900, row.cfg.dir > 0 ? vel : -vel));
+      }
+      dragging = false;
+    };
+    t.addEventListener("pointerup", end);
+    t.addEventListener("pointercancel", end);
+    t.addEventListener("pointerleave", end);
+  }
   function stepRows(dt) {
-    if (reduceMotion || !floorVisible || document.body.classList.contains("lb-open")) return;
+    if (!floorVisible || document.body.classList.contains("lb-open")) return;
     for (const r of rows) {
       if (!r.setW) continue;
+      if (reduceMotion) { r.speedTarget = 0; }
       r.speedNow += (r.speedTarget - r.speedNow) * Math.min(1, dt * 4);
-      r.off = (r.off + r.speedNow * dt) % r.setW;
+      r.off = ((r.off + r.speedNow * dt) % r.setW + r.setW) % r.setW;
       const x = r.cfg.dir > 0 ? r.off - r.setW : -r.off;
       r.belt.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
     }
   }
+  // Gold sparkles behind the Memory Floor: loaded the first time the floor comes into view, paused when it leaves
+  const sparkle = $("sparkleVideo");
+  function floorSparkle(on) {
+    document.body.classList.toggle("on-floor", on);
+    if (!sparkle || reduceMotion || saveData) return;
+    if (on) {
+      if (!sparkle.src) {
+        sparkle.src = "/memories/experience/media/" + (isPhone ? "sparkle-mobile.mp4" : "sparkle-desktop.mp4");
+        sparkle.addEventListener("playing", () => sparkle.classList.add("is-playing"), { once: true });
+      }
+      sparkle.play().catch(() => {});
+    } else sparkle.pause();
+  }
   new IntersectionObserver(([e]) => {
     floorVisible = e.isIntersecting;
     if (e.isIntersecting) $("floor").classList.add("is-in");
+    floorSparkle(e.isIntersecting);
   }, { threshold: 0.08 }).observe($("floor"));
 
   $("tracks").addEventListener("click", (e) => {
     const b = e.target.closest(".tile");
-    if (!b) return;
+    if (!b || suppressClick) return;
     const r = b.getBoundingClientRect();
-    openViewer(media.findIndex((p) => p.id === b.dataset.id), `${((r.left + r.width / 2) / innerWidth) * 100}%`, `${((r.top + r.height / 2) / innerHeight) * 100}%`);
+    openViewer(media.findIndex((p) => p.id === b.dataset.id), `${((r.left + r.width / 2) / innerWidth) * 100}%`, `${((r.top + r.height / 2) / innerHeight) * 100}%`, r);
   });
 
   /* ---------- Viewer: same window, swipe, full size, close returns you to the floor ---------- */
   const lb = $("lb");
   let cur = -1, lastFocus = null;
-  function openViewer(i, fx, fy) {
+  function openViewer(i, fx, fy, fromRect) {
     if (i < 0) return;
     lastFocus = document.activeElement;
     cur = i;
@@ -343,6 +453,20 @@
     flash(0.35, fx, fy);
     show();
     $("lbClose").focus();
+    zoomFrom(fromRect);
+  }
+  // FLIP: start the viewer image where the tile was, then glide it to full view
+  function zoomFrom(rect) {
+    const img = $("lbImg");
+    if (!rect || reduceMotion || img.hidden) return;
+    const run = () => {
+      const to = img.getBoundingClientRect();
+      if (!to.width) return;
+      const sx = rect.width / to.width, sy = rect.height / to.height;
+      const dx = rect.left + rect.width / 2 - (to.left + to.width / 2), dy = rect.top + rect.height / 2 - (to.top + to.height / 2);
+      img.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.6 }, { transform: "none", opacity: 1 }], { duration: 480, easing: "cubic-bezier(.2,.8,.2,1)" });
+    };
+    img.complete && img.naturalWidth ? run() : img.addEventListener("load", run, { once: true });
   }
   function closeViewer() {
     $("lbVideo").pause();
@@ -371,7 +495,7 @@
       vid.play().catch(() => {});
     } else {
       vid.removeAttribute("src");
-      img.src = api.thumbUrl(p);
+      img.src = p.mid_path ? api.midUrl(p) : api.thumbUrl(p);
       const full = new Image();
       full.onload = () => { if (media[cur] === p) img.src = full.src; };
       full.src = api.fullUrl(p);
@@ -417,7 +541,7 @@
     last = t;
     if (!document.hidden) {
       spots.step(t, dt);
-      if (!entering || scrollY < innerHeight) danceFloor.step(dt);
+      if (scrollY < innerHeight) { danceFloor.step(dt); fog.step(t, dt); }
       stepFloaters(t);
       stepRows(dt);
     }

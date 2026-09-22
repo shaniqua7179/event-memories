@@ -1,0 +1,153 @@
+/* =========================================================================
+   Revision 3 · black, silver & gold (the event's real palette), one smaller
+   disco-ball moment, glossy floor with a projected "E" monogram and smoke.
+   Loaded last; overrides experience.css and after-party.css.
+   ========================================================================= */
+:root {
+  --night: #050507;
+  --champagne: #f6e7c1;
+}
+html, body { background: var(--night); }
+
+/* ---------- Room light: warm gold & champagne lead; plum and blue only as faint ambience ---------- */
+.room-base { background: radial-gradient(90% 60% at 50% 0%, #17130d 0%, transparent 65%), radial-gradient(80% 60% at 50% 100%, #0d0b12 0%, transparent 70%), var(--night); }
+.room-base::after { display: none; }
+.g-gold      { background: radial-gradient(circle, rgba(232, 190, 110, 0.55) 0%, rgba(232, 190, 110, 0) 62%); top: -30vmax; left: -18vmax; opacity: calc(0.3 * var(--boost)); animation: drift-a 28s ease-in-out infinite alternate; }
+.g-champagne { background: radial-gradient(circle, rgba(255, 244, 220, 0.4) 0%, rgba(255, 244, 220, 0) 60%); top: -28vmax; right: -22vmax; opacity: calc(0.22 * var(--boost)); animation: drift-b 33s ease-in-out infinite alternate; }
+.g-plum      { background: radial-gradient(circle, rgba(110, 60, 150, 0.55) 0%, rgba(110, 60, 150, 0) 60%); bottom: -40vmax; right: -20vmax; opacity: calc(0.12 * var(--boost)); animation: drift-c 37s ease-in-out infinite alternate; }
+.g-blue      { background: radial-gradient(circle, rgba(70, 110, 230, 0.5) 0%, rgba(70, 110, 230, 0) 60%); bottom: -42vmax; left: -18vmax; opacity: calc(0.08 * var(--boost)); animation: drift-d 41s ease-in-out infinite alternate; }
+.beam { background: linear-gradient(to bottom, rgba(255, 240, 210, 0.2), rgba(240, 210, 150, 0.06) 45%, transparent 75%); opacity: calc(0.5 * var(--boost)); }
+.beam-r { background: linear-gradient(to bottom, rgba(255, 248, 235, 0.2), rgba(220, 225, 240, 0.05) 45%, transparent 75%); }
+.sweep { background: linear-gradient(115deg, transparent 42%, rgba(255, 240, 205, 0.06) 48%, rgba(255, 250, 235, 0.1) 50%, rgba(255, 240, 205, 0.05) 52%, transparent 58%); }
+
+/* ---------- Scene 1 layout: ball on top, headline below it ---------- */
+.entrance { align-items: start; padding-top: clamp(15rem, 25vw, 22rem); padding-bottom: 3rem; }
+.hero { padding-bottom: 1rem; }
+.scroll-cue { display: none; }
+
+/* The one disco-ball moment: smaller, at the top, edges melting into the dark */
+.ball-wrap {
+  position: absolute; z-index: 0; top: 0; left: 50%; transform: translateX(-50%);
+  width: min(58vw, 1040px); aspect-ratio: 16 / 9; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 58% 72% at 50% 22%, #000 40%, transparent 78%);
+  mask-image: radial-gradient(ellipse 58% 72% at 50% 22%, #000 40%, transparent 78%);
+}
+.ball-wrap video { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: screen; opacity: 0; transition: opacity 2s ease; filter: contrast(1.12) brightness(1.1); }
+.ball-wrap video.is-playing { opacity: 0.95; }
+.ball-wrap { background: var(--ball-poster, none) center / cover no-repeat; background-blend-mode: normal; }
+.ball-wrap.video-on { background: none; }
+body.entering .ball-wrap video { transition: opacity 0.6s ease, filter 0.6s ease; filter: contrast(1.2) brightness(1.5); }
+
+/* Headline order: small opener, then JOIN THE / After Party */
+.opener { font-family: var(--font-script); font-style: italic; font-weight: 600; font-size: clamp(1.25rem, 2.1vw, 1.9rem); color: var(--champagne); letter-spacing: 0.01em; margin-bottom: 0.35rem; text-shadow: 0 0 18px rgba(246, 231, 193, 0.35), 0 2px 12px rgba(0, 0, 0, 0.85); }
+.join { font-size: clamp(1.2rem, 2.8vw, 2.4rem); }
+.script-title { font-size: clamp(4.8rem, 12.5vw, 11.5rem); filter: drop-shadow(0 0 16px rgba(243, 217, 138, 0.4)) drop-shadow(0 0 40px rgba(255, 244, 220, 0.18)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6)); }
+/* Mostly white/silver, with gold arriving on "Party" */
+.glitter { background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='1' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 9 -6.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    linear-gradient(100deg, #ffffff 0%, #d9dee6 20%, #ffffff 34%, #b9c0cb 46%, #f1f3f6 56%, #f6e7c1 64%, #f3d98a 74%, #d4af37 86%, #f7e3a1 100%); }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1rem; margin-top: clamp(1.2rem, 3vh, 2rem); }
+.btn-neon { min-height: 58px; padding: 0.9rem 2.6rem; }
+.btn-ghost-gold {
+  display: inline-flex; align-items: center; min-height: 58px; padding: 0.9rem 1.8rem; border-radius: 999px; text-decoration: none;
+  border: 1px solid rgba(243, 217, 138, 0.55); color: var(--champagne); background: rgba(5, 5, 7, 0.45);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  font-weight: 800; font-size: 0.9rem; letter-spacing: 0.16em; text-transform: uppercase; transition: background 0.25s, border-color 0.25s;
+}
+.btn-ghost-gold:hover { background: rgba(243, 217, 138, 0.12); border-color: var(--gold-2); }
+.quick { margin-top: clamp(1rem, 2.6vh, 1.8rem); }
+
+/* ---------- The dance floor ---------- */
+.floor-gloss {
+  position: absolute; z-index: 0; left: 0; right: 0; bottom: 0; height: 34%; pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(22, 18, 12, 0.95), rgba(10, 9, 8, 0.6) 55%, transparent),
+    repeating-linear-gradient(90deg, transparent 0 11vw, rgba(255, 236, 200, 0.05) 11vw calc(11vw + 1px)),
+    radial-gradient(40% 55% at 50% 100%, rgba(246, 231, 193, 0.14), transparent 70%);
+}
+.floor-gloss::after { /* warm reflections of the room lights on the polished floor */
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 7%, rgba(243, 217, 138, 0.07) 7.5%, transparent 9%);
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 85%); mask-image: linear-gradient(to top, #000, transparent 85%);
+  filter: blur(6px); animation: shimmer 9s ease-in-out infinite alternate;
+}
+@keyframes shimmer { to { transform: translateX(3%); opacity: 0.6; } }
+
+/* Monogram projected onto the floor, like a custom gobo light */
+.gobo { position: absolute; z-index: 1; left: 50%; bottom: -3%; width: min(460px, 78vw); aspect-ratio: 1; transform: translateX(-50%); perspective: 700px; pointer-events: none; }
+.gobo-disc {
+  width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center;
+  transform: rotateX(72deg); mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255, 246, 225, 0.22) 0%, rgba(255, 238, 200, 0.12) 45%, rgba(255, 238, 200, 0.0) 64%);
+  box-shadow: inset 0 0 0 3px rgba(255, 244, 220, 0.5), inset 0 0 0 10px rgba(255, 244, 220, 0.06), 0 0 60px rgba(246, 231, 193, 0.25);
+  filter: blur(0.6px); animation: gobo-breathe 6s ease-in-out infinite;
+}
+.gobo-disc span { font-family: var(--font-caps); font-weight: 600; font-size: min(250px, 42vw); line-height: 1; color: rgba(255, 246, 225, 0.9); text-shadow: 0 0 20px rgba(246, 231, 193, 0.9), 0 0 60px rgba(243, 217, 138, 0.6); }
+@keyframes gobo-breathe { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+body.entering .gobo-disc { animation: none; opacity: 1; filter: blur(0.4px) brightness(1.5); transition: filter 0.4s; }
+
+/* Smoke rolling across the floor (drawn in experience.js) */
+.fog { position: absolute; z-index: 2; left: 0; bottom: 0; width: 100%; height: 42%; pointer-events: none; mix-blend-mode: screen; }
+
+/* The floating prints sit above the floor but the smoke passes in front of their lower edges */
+.float-layer { z-index: 1; }
+.hero, .topbar { z-index: 3; }
+.note { z-index: 3; }
+
+/* ---------- Memory Floor background: champagne-gold sparkles drifting through the dark ---------- */
+.room-sparkle { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: screen; opacity: 0; transition: opacity 1.6s ease; }
+body.on-floor .room-sparkle.is-playing { opacity: 0.6; }
+
+/* ---------- Memory Floor refinements ---------- */
+.floor-hint { margin-top: 0.4rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
+.track { cursor: grab; touch-action: pan-y; }
+.track.dragging { cursor: grabbing; }
+.track.dragging .tile { pointer-events: none; }
+.tile { background: #0b0a09; }
+.tile img { image-rendering: auto; }
+.chrome-sub { filter: drop-shadow(0 0 18px rgba(243, 217, 138, 0.3)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6)); }
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover, .tile:focus-visible { box-shadow: 0 0 0 2px var(--gold-2), 0 0 0 4px #c9ced6, 0 0 30px 6px rgba(243, 217, 138, 0.35), 0 30px 70px rgba(0, 0, 0, 0.75); }
+}
+.btn-chrome { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6) inset, 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 34px rgba(243, 217, 138, 0.3); }
+.share-fab { box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55), 0 0 30px rgba(243, 217, 138, 0.35); }
+
+/* ---------- Phones ---------- */
+@media (max-width: 700px) {
+  .entrance { padding-top: 12.5rem; padding-bottom: 2rem; align-items: start; }
+  .ball-wrap { width: 150vw; top: -2vh; -webkit-mask-image: radial-gradient(ellipse 42% 60% at 50% 20%, #000 42%, transparent 80%); mask-image: radial-gradient(ellipse 42% 60% at 50% 20%, #000 42%, transparent 80%); }
+  .opener { font-size: 1.2rem; }
+  .join { font-size: 1.15rem; }
+  .script-title { font-size: clamp(4rem, 21vw, 6.8rem); }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .btn-neon, .btn-ghost-gold { width: min(100%, 21rem); justify-content: center; }
+  .btn-ghost-gold { min-height: 52px; }
+  .gobo { width: 92vw; bottom: -6%; }
+  .fog { height: 34%; }
+  .floor-gloss { height: 26%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gobo-disc, .floor-gloss::after { animation: none; }
+}
+
+/* ---------- Revision 3b: fixes from screenshot review ---------- */
+/* 1. Let the ball glow silver instead of sitting dark */
+.ball-wrap video { filter: brightness(1.85) contrast(1.18) saturate(0.85); }
+.ball-wrap video.is-playing { opacity: 1; }
+/* 2. Smoke and floor fade in softly at their top edge (no hard line) */
+.fog, .floor-gloss { -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 100%); mask-image: linear-gradient(to top, #000 55%, transparent 100%); }
+/* 3. Desktop: fit everything on one screen */
+.entrance { padding-top: clamp(10.5rem, 17vw, 15rem); }
+.script-title { font-size: clamp(4.6rem, 11vw, 10rem); }
+.decades { margin-top: -0.2rem; }
+.tagline { margin-top: 0.7rem; }
+/* 4. The monogram: brighter, warmer light */
+.gobo-disc { background: radial-gradient(circle, rgba(255, 246, 225, 0.3) 0%, rgba(255, 238, 200, 0.16) 45%, rgba(255, 238, 200, 0) 64%); }
+.gobo-disc span { color: #fff6e1; text-shadow: 0 0 10px #fff3d6, 0 0 30px rgba(246, 231, 193, 0.95), 0 0 80px rgba(243, 217, 138, 0.8); }
+@media (max-width: 700px) {
+  .entrance { padding-top: 11rem; }
+  .btn-neon { font-size: 0.84rem; letter-spacing: 0.12em; padding: 0.9rem 1rem; white-space: nowrap; }
+  /* 5. On phones "Add Your Moment" is already in the top bar */
+  .hero-actions .btn-ghost-gold { display: none; }
+  .gobo { bottom: -9%; width: 88vw; }
+}
