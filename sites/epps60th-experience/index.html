@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#06060b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.5' stop-color='%23aab2bf'/%3E%3Cstop offset='1' stop-color='%23353a44'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3Cpath d='M4 32h56M32 4v56M8 18h48M8 46h48M18 8v48M46 8v48' stroke='%23000' stroke-opacity='.25' stroke-width='1.2'/%3E%3C/svg%3E">
-<title>Oh, What a Night · Oscar D. Epps, Sr. 60th Birthday</title>
+<title>Join the After Party · Oscar D. Epps, Sr. 60th Birthday</title>
 <meta name="description" content="Relive Dancing Through the Decades, Oscar D. Epps, Sr.'s 60th birthday celebration. See the photos and add your own.">
 <script>
   if (!location.pathname.endsWith("/") && !/\.[a-z0-9]+$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search + location.hash);
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&family=Yellowtail&family=Parisienne&family=Cinzel:wght@500;600&display=swap">
 <link rel="preload" as="image" href="media/disco-desktop.jpg" media="(min-width: 701px)">
 <link rel="preload" as="image" href="media/disco-mobile.jpg" media="(max-width: 700px)">
 <link rel="stylesheet" href="experience.css">
+<link rel="stylesheet" href="after-party.css">
 <script src="../config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="../core.js"></script>
@@ -44,17 +45,39 @@
   <section class="entrance" id="entrance" aria-labelledby="heroTitle">
     <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
 
+    <div class="dancefloor" aria-hidden="true"><canvas id="floorCanvas" width="28" height="14"></canvas></div>
+
+    <header class="topbar reveal" style="--d: 0.4s">
+      <a class="mark" href="#entrance"><span class="mark-name">Oscar D. Epps, Sr.</span><span class="mark-sub">60th Birthday Celebration</span></a>
+      <nav class="toplinks" aria-label="Sections">
+        <a href="#floor" data-go="floor">Photos</a>
+        <a href="../?tab=speeches" data-go="videos">Videos</a>
+        <a href="../?tab=notes">Messages</a>
+        <a class="btn-gold-line" href="../?share=1">Add Your Moment</a>
+      </nav>
+    </header>
+
+    <p class="note note-l" aria-hidden="true">Good Music<br>Great People<br>Unforgettable Moments</p>
+    <p class="note note-r" aria-hidden="true">Different Decades.<br>Same Joy.</p>
+    <p class="note note-b" aria-hidden="true">Same Pastor.<br>New Memories.</p>
+
     <div class="hero" id="hero">
-      <p class="honoree reveal" style="--d: 0.9s">Oscar D. Epps, Sr.'s 60th Birthday Celebration</p>
-      <h1 class="chrome-title" id="heroTitle" aria-label="Oh, what a night.">
-        <span class="line" aria-hidden="true" data-text="OH, WHAT"></span>
-        <span class="line" aria-hidden="true" data-text="A NIGHT."></span>
+      <p class="join reveal" style="--d: 0.9s">Join the</p>
+      <h1 class="script-title" id="heroTitle"><span class="glitter">After Party</span>
+        <svg class="swoosh" viewBox="0 0 600 40" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#e9edf2"/><stop offset=".45" stop-color="#ffffff"/><stop offset=".6" stop-color="#f3d98a"/><stop offset="1" stop-color="#c9a13b"/></linearGradient></defs><path d="M8 30 C 160 12, 380 8, 592 18" fill="none" stroke="url(#sw)" stroke-width="3.2" stroke-linecap="round"/></svg>
+        <span class="sparkle s1" aria-hidden="true"></span><span class="sparkle s2" aria-hidden="true"></span><span class="sparkle s3" aria-hidden="true"></span><span class="sparkle s4" aria-hidden="true"></span>
       </h1>
-      <p class="decades reveal" style="--d: 2.1s">Dancing Through the Decades</p>
-      <div class="hero-actions reveal" style="--d: 2.5s">
-        <button class="btn-chrome" id="enterBtn">Enter the Experience</button>
-        <a class="btn-ghost" href="../?share=1">Add Your Moment</a>
+      <p class="decades reveal" style="--d: 2.3s">Dancing Through the Decades</p>
+      <p class="tagline reveal" style="--d: 2.7s">The party ended. The memories didn't.</p>
+      <div class="hero-actions reveal" style="--d: 3.1s">
+        <button class="btn-neon" id="enterBtn">Enter the Experience <span aria-hidden="true">›</span></button>
       </div>
+      <nav class="quick reveal" style="--d: 3.5s" aria-label="Jump to">
+        <button type="button" data-go="floor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg><b>See</b><span>the photos</span></button>
+        <button type="button" data-go="videos"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg><b>Watch</b><span>the videos</span></button>
+        <a href="../?tab=notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><b>Read</b><span>the messages</span></a>
+        <button type="button" data-go="share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5l6 6-6 6M20 11H9a5 5 0 0 0-5 5v3"/></svg><b>Share</b><span>your moments</span></button>
+      </nav>
     </div>
 
     <button class="scroll-cue reveal" style="--d: 3.2s" id="scrollCue" aria-label="Scroll to the Memory Floor"><span></span></button>

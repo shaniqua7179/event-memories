@@ -1,0 +1,173 @@
+/* =========================================================================
+   After Party direction (from the owner's mockups): glitter script, gold,
+   torn prints, handwritten notes, glowing dance floor, top bar, quick links.
+   Loaded after experience.css and overrides parts of it.
+   ========================================================================= */
+:root {
+  --gold-1: #fff3c9; --gold-2: #f3d98a; --gold-3: #d4af37; --gold-4: #a8841f;
+  --font-brush: "Yellowtail", "Brush Script MT", cursive;
+  --font-hand: "Parisienne", "Brush Script MT", cursive;
+  --font-caps: "Cinzel", Georgia, serif;
+}
+.scroll-cue { display: none; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: absolute; z-index: 5; top: max(1.2rem, env(safe-area-inset-top));
+  left: clamp(1rem, 4vw, 3.5rem); right: clamp(1rem, 4vw, 3.5rem);
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+}
+.mark { text-decoration: none; display: grid; line-height: 1.15; }
+.mark-name { font-family: var(--font-caps); font-weight: 600; font-size: clamp(1rem, 1.7vw, 1.45rem); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7); }
+.mark-sub { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-soft); margin-top: 0.25rem; }
+.toplinks { display: flex; align-items: center; gap: clamp(0.9rem, 2vw, 1.8rem); }
+.toplinks a { text-decoration: none; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); }
+.toplinks a:hover { color: var(--gold-2); }
+.btn-gold-line {
+  padding: 0.75rem 1.4rem; border-radius: 999px; border: 1.5px solid var(--gold-2); color: var(--gold-1) !important;
+  box-shadow: 0 0 18px rgba(243, 217, 138, 0.25), inset 0 0 12px rgba(243, 217, 138, 0.12);
+  background: rgba(8, 8, 14, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.btn-gold-line:hover { background: rgba(243, 217, 138, 0.14); }
+
+/* ---------- Headline: "JOIN THE" + glittering silver-to-gold script ---------- */
+.join {
+  font-family: var(--font-ui); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5em; margin-right: -0.5em;
+  font-size: clamp(1.4rem, 3.6vw, 3rem); color: #fff;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.35), 0 2px 16px rgba(0, 0, 0, 0.7);
+}
+.script-title {
+  position: relative; display: inline-block; font-family: var(--font-brush); font-weight: 400; line-height: 1;
+  font-size: clamp(5.2rem, 17vw, 14.5rem); margin: -0.08em 0 0.12em; padding: 0 0.12em 0.14em;
+  filter: drop-shadow(0 0 18px rgba(243, 217, 138, 0.45)) drop-shadow(0 0 50px rgba(255, 61, 165, 0.25)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55));
+}
+.glitter {
+  display: inline-block; padding: 0.05em 0.08em 0.12em;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='1' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 9 -6.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    linear-gradient(100deg, #f6f8fb 0%, #c9cfd8 18%, #ffffff 30%, #aeb6c2 42%, #fff3c9 52%, #f3d98a 62%, #d4af37 76%, #fff0b8 86%, #b8912c 100%);
+  background-size: 160px 160px, 100% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  clip-path: inset(-20% 100% -20% -5%);
+}
+.is-in .glitter { animation: write-on 1.8s cubic-bezier(.6, .05, .25, 1) 1.2s forwards, glitter-drift 6s linear infinite; }
+@keyframes write-on { to { clip-path: inset(-20% -5% -20% -5%); } }
+@keyframes glitter-drift { to { background-position: 160px 80px, 0 0; } }
+.swoosh { position: absolute; left: 12%; bottom: 0.02em; width: 86%; height: 0.2em; overflow: visible; }
+.swoosh path { stroke-dasharray: 640; stroke-dashoffset: 640; filter: drop-shadow(0 0 6px rgba(243, 217, 138, 0.8)); }
+.is-in .swoosh path { animation: draw 1.1s ease-out 2.7s forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.sparkle {
+  position: absolute; width: 0.16em; height: 0.16em; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #fff 0 12%, transparent 13%), linear-gradient(0deg, transparent 46%, #fff 50%, transparent 54%), linear-gradient(90deg, transparent 46%, #fff 50%, transparent 54%);
+  filter: drop-shadow(0 0 6px #fff); animation: twinkle 3.2s ease-in-out infinite;
+}
+.s1 { top: 12%; left: 20%; animation-delay: 3.2s; }
+.s2 { top: 30%; left: 56%; animation-delay: 4.1s; width: 0.11em; height: 0.11em; }
+.s3 { top: 8%; right: 12%; animation-delay: 4.9s; }
+.s4 { bottom: 22%; right: 26%; animation-delay: 5.6s; width: 0.1em; height: 0.1em; }
+@keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+
+.decades {
+  font-family: var(--font-caps); font-weight: 600; letter-spacing: 0.45em; margin-right: -0.45em;
+  font-size: clamp(0.85rem, 1.8vw, 1.35rem); color: var(--gold-2);
+  text-shadow: 0 0 16px rgba(212, 175, 55, 0.6), 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+.tagline {
+  margin-top: 1.1rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.32em; margin-right: -0.32em;
+  font-size: clamp(0.72rem, 1.3vw, 1rem); color: rgba(255, 255, 255, 0.92); text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+.hero-actions { margin-top: clamp(1.4rem, 3.4vh, 2.2rem); }
+
+/* Neon-gold "Enter" pill */
+.btn-neon {
+  display: inline-flex; align-items: center; gap: 0.9rem; min-height: 62px; padding: 1rem 3rem; border-radius: 999px; cursor: pointer;
+  background: rgba(6, 6, 11, 0.72); color: #fff; border: 2px solid var(--gold-2);
+  font-weight: 800; font-size: 1.02rem; letter-spacing: 0.2em; text-transform: uppercase;
+  box-shadow: 0 0 0 1px rgba(255, 243, 201, 0.35) inset, 0 0 22px rgba(243, 217, 138, 0.55), 0 0 60px rgba(212, 175, 55, 0.3), 0 12px 30px rgba(0, 0, 0, 0.5);
+  animation: neon-breathe 3.2s ease-in-out infinite; transition: transform 0.25s ease, background 0.25s ease;
+}
+.btn-neon span { font-size: 1.4em; line-height: 0; color: var(--gold-2); }
+.btn-neon:hover { transform: scale(1.03); background: rgba(243, 217, 138, 0.12); }
+@keyframes neon-breathe { 50% { box-shadow: 0 0 0 1px rgba(255, 243, 201, 0.5) inset, 0 0 32px rgba(243, 217, 138, 0.8), 0 0 90px rgba(212, 175, 55, 0.4), 0 12px 30px rgba(0, 0, 0, 0.5); } }
+
+/* Quick links */
+.quick { display: flex; justify-content: center; margin-top: clamp(1.4rem, 3.4vh, 2.4rem); }
+.quick > * { display: grid; justify-items: center; gap: 0.2rem; padding: 0.3rem clamp(0.9rem, 2.2vw, 2rem); background: none; border: 0; cursor: pointer; text-decoration: none; color: #fff; position: relative; }
+.quick > * + *::before { content: ""; position: absolute; left: 0; top: 18%; bottom: 18%; width: 1px; background: linear-gradient(transparent, rgba(255, 255, 255, 0.35), transparent); }
+.quick svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; margin-bottom: 0.35rem; filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4)); transition: stroke 0.2s; }
+.quick b { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
+.quick span { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-soft); }
+.quick > *:hover svg { stroke: var(--gold-2); }
+.quick > *:hover b { color: var(--gold-2); }
+
+/* ---------- Handwritten gold notes ---------- */
+.note {
+  position: absolute; z-index: 2; font-family: var(--font-hand); color: var(--gold-2); line-height: 1.15;
+  font-size: clamp(1.4rem, 2.2vw, 2.1rem); text-shadow: 0 0 14px rgba(212, 175, 55, 0.55), 0 2px 8px rgba(0, 0, 0, 0.7);
+  opacity: 0; transition: opacity 1.4s ease;
+}
+.is-in .note { opacity: 1; }
+.note-l { left: clamp(1rem, 2.5vw, 2.6rem); top: 43.5%; transform: rotate(-9deg); transition-delay: 3.6s; font-size: clamp(1.25rem, 1.8vw, 1.8rem); }
+.note-r { right: clamp(1rem, 2.5vw, 2.6rem); top: 42%; transform: rotate(-10deg); text-align: right; transition-delay: 4s; font-size: clamp(1.25rem, 1.9vw, 1.9rem); }
+.note-b { display: none; }
+/* Handwritten caption on a print's bottom border (like an instant photo) */
+.fphoto .print.captioned { padding-bottom: clamp(44px, 4.2vw, 70px); }
+.print-cap { position: absolute; left: 0; right: 0; bottom: clamp(4px, 0.5vw, 10px); text-align: center; font-family: var(--font-hand); color: #3a3140; line-height: 1.02; font-size: clamp(1rem, 1.35vw, 1.5rem); }
+body.entering .note { opacity: 0; transition-delay: 0s; transition-duration: 0.4s; }
+
+/* ---------- Torn-edge photo prints (edge shape set per photo in JS) ---------- */
+.fphoto .print {
+  background: #f4efe4; padding: clamp(6px, 0.7vw, 12px); border-radius: 0; box-shadow: none;
+  clip-path: var(--torn, none);
+}
+.fphoto { filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.6)); }
+.fphoto .print img { border-radius: 0; aspect-ratio: 4 / 5; object-fit: cover; }
+.fphoto.far { filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.5)) blur(1.2px) brightness(0.72); }
+
+/* ---------- Glowing dance floor ---------- */
+.dancefloor {
+  position: absolute; z-index: 0; left: -30%; right: -30%; bottom: -6vh; height: 46vh;
+  perspective: 420px; perspective-origin: 50% 0%; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent 100%); mask-image: linear-gradient(to top, #000 40%, transparent 100%);
+}
+.dancefloor canvas {
+  position: absolute; left: 0; top: 0; width: 100%; height: 190%;
+  transform-origin: 50% 0; transform: rotateX(72deg);
+  filter: blur(0.8px) saturate(1.3); opacity: 0.6; mix-blend-mode: screen;
+}
+.dancefloor::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(255, 255, 255, 0.06), transparent 70%); mix-blend-mode: screen; }
+body.entering .dancefloor canvas { opacity: 1; filter: blur(1px) saturate(1.8) brightness(1.4); transition: filter 0.4s, opacity 0.4s; }
+
+/* ---------- Smaller screens ---------- */
+@media (max-width: 900px) {
+  .toplinks a:not(.btn-gold-line) { display: none; }
+  .note-l, .note-r { display: none; }
+}
+@media (max-width: 700px) {
+  .entrance { align-items: center; padding-top: 10.5rem; padding-bottom: 4rem; }
+  .fphoto.far { opacity: 0.55; }
+  .dancefloor canvas { opacity: 0.42; }
+  .topbar { align-items: flex-start; }
+  .mark-name { font-size: 0.92rem; }
+  .mark-sub { font-size: 0.56rem; letter-spacing: 0.16em; }
+  .btn-gold-line { padding: 0.6rem 0.9rem; font-size: 0.62rem !important; letter-spacing: 0.1em !important; }
+  .join { letter-spacing: 0.4em; margin-right: -0.4em; font-size: 1.25rem; }
+  .script-title { font-size: clamp(4.2rem, 23vw, 7.5rem); }
+  .decades { letter-spacing: 0.24em; margin-right: -0.24em; font-size: 0.78rem; }
+  .tagline { letter-spacing: 0.16em; margin-right: -0.16em; font-size: 0.68rem; line-height: 1.9; }
+  .btn-neon { width: min(100%, 21rem); justify-content: center; padding: 1rem 1.2rem; font-size: 0.9rem; }
+  .quick > * { padding: 0.3rem 0.5rem; }
+  .quick svg { width: 24px; height: 24px; }
+  .quick b { font-size: 0.64rem; letter-spacing: 0.1em; }
+  .quick span { font-size: 0.54rem; letter-spacing: 0.06em; }
+  .note-b { display: none; }
+  .dancefloor { height: 30vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glitter { clip-path: none !important; animation: none !important; }
+  .swoosh path { stroke-dashoffset: 0 !important; animation: none !important; }
+  .sparkle { display: none; }
+  .note { opacity: 1 !important; transition: none; }
+  .btn-neon { animation: none; }
+}

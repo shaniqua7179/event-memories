@@ -1,5 +1,5 @@
 /* =========================================================================
-   Oh, What a Night · experience engine for Scenes 1 & 2
+   Join the After Party · experience engine for Scenes 1 & 2
    Data comes from the existing app layer (core.js); nothing here writes data.
    ========================================================================= */
 (function () {
@@ -101,25 +101,58 @@
     };
   })();
 
+  /* ---------- Glowing dance floor: tiles that pulse through the room's colors ---------- */
+  const danceFloor = (() => {
+    const cv = $("floorCanvas");
+    if (!cv) return { step() {} };
+    const cols = isPhone ? 26 : 40, rows = isPhone ? 12 : 16, tile = 22, gap = 2;
+    cv.width = cols * tile; cv.height = rows * tile;
+    const ctx = cv.getContext("2d");
+    const palette = [[255, 61, 165], [139, 92, 255], [79, 227, 255], [255, 181, 71], [255, 255, 255], [60, 90, 255]];
+    const cells = Array.from({ length: cols * rows }, () => ({ c: palette[Math.floor(Math.random() * palette.length)], v: Math.random(), target: Math.random() }));
+    let acc = 0;
+    function draw() {
+      ctx.fillStyle = "#050509"; ctx.fillRect(0, 0, cv.width, cv.height);
+      cells.forEach((cell, i) => {
+        const x = (i % cols) * tile, y = Math.floor(i / cols) * tile, a = 0.12 + cell.v * 0.88;
+        ctx.fillStyle = `rgba(${cell.c[0]},${cell.c[1]},${cell.c[2]},${a.toFixed(2)})`;
+        ctx.fillRect(x + gap / 2, y + gap / 2, tile - gap, tile - gap);
+      });
+    }
+    draw();
+    return {
+      step(dt) {
+        if (reduceMotion) return;
+        acc += dt;
+        for (const cell of cells) {
+          cell.v += (cell.target - cell.v) * Math.min(1, dt * 2.2);
+          if (Math.abs(cell.target - cell.v) < 0.04) { cell.target = Math.random() < 0.35 ? Math.random() : Math.random() * 0.25; if (Math.random() < 0.15) cell.c = palette[Math.floor(Math.random() * palette.length)]; }
+        }
+        if (acc > 0.06) { acc = 0; draw(); }
+      }
+    };
+  })();
+
   /* ---------- Load the real photos from the existing app layer ---------- */
   let media = []; // photos + dance-floor videos (speeches stay in their own section)
+  let speechCount = 0;
   const isSpeech = (p) => p.kind === "video" && p.category && p.category !== "moment";
 
   /* ---------- Scene 1 · floating photographs ---------- */
   const floaters = [];
   const slotsDesktop = [
-    { x: "4%", y: "12%", w: "13vw", r: -7, depth: 0.5, far: false },
-    { x: "80%", y: "8%", w: "12vw", r: 6, depth: 0.35, far: true },
-    { x: "2%", y: "58%", w: "11vw", r: 5, depth: 0.3, far: true },
-    { x: "83%", y: "54%", w: "14vw", r: -5, depth: 0.6, far: false },
-    { x: "17%", y: "78%", w: "9vw", r: -3, depth: 0.25, far: true },
-    { x: "68%", y: "80%", w: "10vw", r: 4, depth: 0.45, far: false }
+    { x: "1.5%", y: "10%", w: "14vw", r: -8, depth: 0.5, far: false },
+    { x: "84%", y: "9%", w: "13vw", r: 7, depth: 0.45, far: false },
+    { x: "1%", y: "57%", w: "12.5vw", r: 5, depth: 0.55, far: false, caption: "Same Pastor.<br>New Memories." },
+    { x: "85.5%", y: "60%", w: "12vw", r: -7, depth: 0.6, far: false },
+    { x: "18%", y: "76%", w: "8vw", r: 4, depth: 0.2, far: true },
+    { x: "73%", y: "77%", w: "8vw", r: -4, depth: 0.25, far: true }
   ];
   const slotsPhone = [
-    { x: "-6%", y: "6%", w: "36vw", r: -8, depth: 0.4, far: false },
-    { x: "70%", y: "3%", w: "34vw", r: 7, depth: 0.3, far: true },
-    { x: "74%", y: "34%", w: "28vw", r: -5, depth: 0.25, far: true },
-    { x: "-8%", y: "38%", w: "26vw", r: 6, depth: 0.2, far: true }
+    { x: "-7%", y: "10%", w: "34vw", r: -8, depth: 0.4, far: false },
+    { x: "72%", y: "11%", w: "32vw", r: 7, depth: 0.3, far: false },
+    { x: "-16%", y: "50%", w: "26vw", r: 6, depth: 0.2, far: true },
+    { x: "88%", y: "47%", w: "24vw", r: -5, depth: 0.25, far: true }
   ];
   function buildFloaters(photos) {
     const layer = $("floatLayer");
@@ -131,10 +164,20 @@
       el.className = "fphoto" + (s.far ? " far" : "");
       el.style.setProperty("--x", s.x); el.style.setProperty("--y", s.y); el.style.setProperty("--w", s.w);
       el.style.setProperty("--r", `${s.r}deg`); el.style.setProperty("--gd", `${i * 1.3}s`);
-      el.innerHTML = `<div class="print"><img src="${esc(api.thumbUrl(p))}" alt="" decoding="async"></div>`;
+      el.innerHTML = `<div class="print${s.caption ? " captioned" : ""}"><img src="${esc(api.thumbUrl(p))}" alt="" decoding="async">${s.caption ? `<span class="print-cap">${s.caption}</span>` : ""}</div>`;
+      el.querySelector(".print").style.setProperty("--torn", tornEdge());
       layer.appendChild(el);
       floaters.push({ el, s, ph: rand(0, Math.PI * 2), ax: rand(8, 20), ay: rand(10, 24), speed: rand(0.00018, 0.00032), shown: false, delay: 1600 + i * 260 });
     });
+  }
+  // A random ragged outline so every print looks hand-torn
+  function tornEdge() {
+    const pts = [], n = 16, j = () => rand(0, 2.4).toFixed(2);
+    for (let i = 0; i <= n; i++) pts.push(`${(i / n * 100).toFixed(2)}% ${j()}%`);
+    for (let i = 1; i <= n; i++) pts.push(`${(100 - +j()).toFixed(2)}% ${(i / n * 100).toFixed(2)}%`);
+    for (let i = n - 1; i >= 0; i--) pts.push(`${(i / n * 100).toFixed(2)}% ${(100 - +j()).toFixed(2)}%`);
+    for (let i = n - 1; i >= 1; i--) pts.push(`${j()}% ${(i / n * 100).toFixed(2)}%`);
+    return `polygon(${pts.join(",")})`;
   }
   let pointerX = 0, pointerY = 0;
   if (finePointer) addEventListener("pointermove", (e) => { pointerX = e.clientX / innerWidth - 0.5; pointerY = e.clientY / innerHeight - 0.5; }, { passive: true });
@@ -182,6 +225,21 @@
     setTimeout(() => { root.style.setProperty("--boost", "1"); spots.boost(1); }, 1400);
   }
   $("enterBtn").addEventListener("click", enter);
+  document.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", async (e) => {
+    const go = el.dataset.go;
+    if (go === "floor") { e.preventDefault(); enter(); }
+    else if (go === "videos") {
+      // Speeches have their own section on the full gallery page; dance-floor videos are on the Memory Floor
+      if (speechCount) return; // follow the link to ../?tab=speeches
+      e.preventDefault(); enter();
+    } else if (go === "share") {
+      e.preventDefault();
+      const url = location.origin + location.pathname;
+      const data = { title: "Join the After Party", text: "Relive Pastor Epps's 60th birthday celebration and add your photos!", url };
+      if (navigator.share) { try { await navigator.share(data); } catch {} }
+      else { try { await navigator.clipboard.writeText(url); el.querySelector("span").textContent = "link copied!"; } catch {} }
+    }
+  }));
   $("scrollCue").addEventListener("click", enter);
 
   // Scrolling back up to the entrance resets it so ENTER can play again
@@ -359,6 +417,7 @@
     last = t;
     if (!document.hidden) {
       spots.step(t, dt);
+      if (!entering || scrollY < innerHeight) danceFloor.step(dt);
       stepFloaters(t);
       stepRows(dt);
     }
@@ -369,6 +428,7 @@
   /* ---------- Go ---------- */
   api.listPhotos().then((all) => {
     media = all.filter((p) => !isSpeech(p));
+    speechCount = all.length - media.length;
     buildFloaters(media);
     buildFloor();
   }).catch(() => {
