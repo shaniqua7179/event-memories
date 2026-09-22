@@ -9,16 +9,17 @@
 <meta name="description" content="Oh, what a night. Join the After Party: relive Oscar D. Epps, Sr.'s 60th birthday celebration, see the photos and add your own.">
 <meta property="og:title" content="Join the After Party · Oscar D. Epps, Sr. 60th Birthday">
 <meta property="og:description" content="The party ended. The memories didn't. See the photos and add yours.">
-<meta property="og:image" content="/memories/experience/media/ball-desktop.jpg">
+<meta property="og:image" content="/memories/experience/media/ballroom-desktop.jpg">
 <!-- All paths are absolute so this page works both here and as the epps60th.com homepage -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&family=Yellowtail&family=Parisienne&family=Cinzel:wght@500;600&display=swap">
-<link rel="preload" as="image" href="/memories/experience/media/ball-desktop.jpg" media="(min-width: 701px)">
-<link rel="preload" as="image" href="/memories/experience/media/ball-mobile.jpg" media="(max-width: 700px)">
+<link rel="preload" as="image" href="/memories/experience/media/ballroom-desktop.jpg" media="(min-width: 701px)">
+<link rel="preload" as="image" href="/memories/experience/media/ballroom-mobile.jpg" media="(max-width: 700px)">
 <link rel="stylesheet" href="/memories/experience/experience.css">
 <link rel="stylesheet" href="/memories/experience/after-party.css">
 <link rel="stylesheet" href="/memories/experience/revision.css">
+<link rel="stylesheet" href="/memories/experience/ballroom.css">
 <script src="/memories/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="/memories/core.js"></script>
@@ -45,13 +46,13 @@
 <main>
   <!-- ===== Scene 1 · The Entrance ===== -->
   <section class="entrance" id="entrance" aria-labelledby="heroTitle">
-    <!-- One disco-ball moment, at the top, partly out of frame -->
-    <div class="ball-wrap" aria-hidden="true">
+    <!-- The ballroom: full-screen video (the Pollo.ai watermark is left visible, as the free plan requires) -->
+    <div class="pollo-bg" aria-hidden="true">
       <video id="ballVideo" muted loop playsinline preload="none"></video>
+      <div class="pollo-scrim"></div>
     </div>
 
     <!-- The dance floor: glossy black, a monogram projected in light, smoke rolling across -->
-    <div class="floor-gloss" aria-hidden="true"></div>
     <div class="gobo" aria-hidden="true"><div class="gobo-disc"><span>E</span></div></div>
     <canvas class="fog" id="fog" aria-hidden="true"></canvas>
 

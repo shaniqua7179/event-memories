@@ -1,0 +1,60 @@
+/* =========================================================================
+   Revision 4 · the Pollo ballroom video as the full entrance, no floating photos.
+   The Pollo.ai watermark (top-right of the video) stays visible and uncovered.
+   ========================================================================= */
+
+/* The ballroom fills the entrance */
+.pollo-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--ball-poster, none) center / cover no-repeat; }
+.pollo-bg.video-on { background: none; }
+.pollo-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0; transition: opacity 1.8s ease; }
+.pollo-bg video.is-playing { opacity: 1; }
+/* A soft pool of darkness behind the headline so it reads over the busy room; edges stay bright */
+.pollo-scrim {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 46% 42% at 50% 56%, rgba(5, 5, 7, 0.62), rgba(5, 5, 7, 0.28) 60%, transparent 85%),
+    linear-gradient(to bottom, rgba(5, 5, 7, 0.1), transparent 30%, transparent 75%, rgba(5, 5, 7, 0.85));
+}
+body.entering .pollo-bg video { filter: brightness(1.35); transition: filter 0.5s ease; }
+
+/* The previous disco-ball layer, floor overlay and smoke density are replaced by the video's own */
+.ball-wrap, .floor-gloss { display: none; }
+.fog { opacity: 0.55; }
+
+/* Headline sits in the middle of the room */
+.entrance { align-items: center; padding-top: clamp(6rem, 12vh, 9rem); padding-bottom: clamp(3rem, 8vh, 5rem); }
+.script-title { font-size: clamp(4.6rem, 11vw, 10.5rem); }
+
+/* Keep the top-right corner of the video clear: the right-hand links drop below it */
+.toplinks { margin-top: clamp(3.4rem, 7vh, 4.6rem); align-self: flex-start; }
+.mark { align-self: flex-start; }
+
+/* Notes stay, softened so the video carries the scene */
+.note { opacity: 0; }
+.is-in .note { opacity: 0.9; }
+
+/* ---------- Phones: show the whole video frame as a band at the top (so the watermark is never cropped away) ---------- */
+@media (max-width: 700px) {
+  .pollo-bg { inset: 0 0 auto 0; height: auto; aspect-ratio: 1600 / 906; background-size: contain; background-position: top center;
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent); }
+  .pollo-bg video { object-fit: contain; object-position: top center; }
+  .pollo-scrim { background: linear-gradient(to bottom, transparent 55%, rgba(5, 5, 7, 0.9)); }
+  .entrance { align-items: start; padding-top: calc(56.6vw + 1rem); }
+  /* The top bar sits over the video band; only the name stays there so the watermark corner is clear */
+  .toplinks { display: none; }
+  .hero-actions .btn-ghost-gold { display: inline-flex; }
+  .gobo { bottom: -8%; }
+}
+
+/* ---------- 4b: keep the watermark corner completely clear; headline below the ball ---------- */
+.toplinks { display: none; }
+.entrance { padding-top: clamp(12rem, 31vh, 17rem); padding-bottom: 1.5rem; }
+.script-title { font-size: clamp(4.4rem, 9.5vw, 9rem); margin-bottom: 0.05em; }
+.hero-actions { margin-top: clamp(1rem, 2.4vh, 1.6rem); }
+.quick { margin-top: clamp(0.8rem, 2vh, 1.4rem); }
+@media (max-width: 700px) {
+  .entrance { padding-top: calc(56.6vw + 1rem); }
+  .script-title { font-size: clamp(4rem, 20vw, 6.6rem); }
+  .mark-name { font-size: 0.85rem; }
+  .mark-sub { font-size: 0.5rem; }
+}

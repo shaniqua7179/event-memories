@@ -16,11 +16,11 @@
 
   /* ---------- The disco ball: one video, at the top of the entrance only; poster first; never on data-saver / reduced motion ---------- */
   const MEDIA = "/memories/experience/media/";
-  const ballWrap = document.querySelector(".ball-wrap");
+  const ballWrap = document.querySelector(".pollo-bg");
   const video = $("ballVideo");
-  ballWrap.style.setProperty("--ball-poster", `url("${MEDIA}${isPhone ? "ball-mobile.jpg" : "ball-desktop.jpg"}")`);
+  ballWrap.style.setProperty("--ball-poster", `url("${MEDIA}${isPhone ? "ballroom-mobile.jpg" : "ballroom-desktop.jpg"}")`);
   if (!reduceMotion && !saveData) {
-    video.src = MEDIA + (isPhone ? "ball-mobile.mp4" : "ball-desktop.mp4");
+    video.src = MEDIA + (isPhone ? "ballroom-mobile.mp4" : "ballroom-desktop.mp4");
     video.addEventListener("playing", () => { video.classList.add("is-playing"); ballWrap.classList.add("video-on"); }, { once: true });
     const tryPlay = () => video.play().catch(() => {});
     let entranceOnScreen = true;
@@ -553,7 +553,6 @@
   api.listPhotos().then((all) => {
     media = all.filter((p) => !isSpeech(p));
     speechCount = all.length - media.length;
-    buildFloaters(media);
     buildFloor();
   }).catch(() => {
     $("floorEmpty").textContent = "The photos didn't load. Refresh the page to try again.";
