@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06060b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.5' stop-color='%23aab2bf'/%3E%3Cstop offset='1' stop-color='%23353a44'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3Cpath d='M4 32h56M32 4v56M8 18h48M8 46h48M18 8v48M46 8v48' stroke='%23000' stroke-opacity='.25' stroke-width='1.2'/%3E%3C/svg%3E">
+<title>Oh, What a Night · Oscar D. Epps, Sr. 60th Birthday</title>
+<meta name="description" content="Relive Dancing Through the Decades, Oscar D. Epps, Sr.'s 60th birthday celebration. See the photos and add your own.">
+<script>
+  if (!location.pathname.endsWith("/") && !/\.[a-z0-9]+$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search + location.hash);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&display=swap">
+<link rel="preload" as="image" href="media/disco-desktop.jpg" media="(min-width: 701px)">
+<link rel="preload" as="image" href="media/disco-mobile.jpg" media="(max-width: 700px)">
+<link rel="stylesheet" href="experience.css">
+<script src="../config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="../core.js"></script>
+</head>
+<body>
+
+<!-- ===== The room: fixed layers behind (and light above) everything ===== -->
+<div class="room" aria-hidden="true">
+  <div class="room-base"></div>
+  <video class="room-video" id="roomVideo" muted loop playsinline preload="none"></video>
+  <div class="glow g-magenta"></div>
+  <div class="glow g-violet"></div>
+  <div class="glow g-cyan"></div>
+  <div class="glow g-amber"></div>
+  <div class="beam beam-l"></div>
+  <div class="beam beam-r"></div>
+  <div class="sweep"></div>
+  <div class="vignette"></div>
+</div>
+<canvas class="spots" id="spots" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="flash" id="flash" aria-hidden="true"></div>
+
+<main>
+  <!-- ===== Scene 1 · The Entrance ===== -->
+  <section class="entrance" id="entrance" aria-labelledby="heroTitle">
+    <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+
+    <div class="hero" id="hero">
+      <p class="honoree reveal" style="--d: 0.9s">Oscar D. Epps, Sr.'s 60th Birthday Celebration</p>
+      <h1 class="chrome-title" id="heroTitle" aria-label="Oh, what a night.">
+        <span class="line" aria-hidden="true" data-text="OH, WHAT"></span>
+        <span class="line" aria-hidden="true" data-text="A NIGHT."></span>
+      </h1>
+      <p class="decades reveal" style="--d: 2.1s">Dancing Through the Decades</p>
+      <div class="hero-actions reveal" style="--d: 2.5s">
+        <button class="btn-chrome" id="enterBtn">Enter the Experience</button>
+        <a class="btn-ghost" href="../?share=1">Add Your Moment</a>
+      </div>
+    </div>
+
+    <button class="scroll-cue reveal" style="--d: 3.2s" id="scrollCue" aria-label="Scroll to the Memory Floor"><span></span></button>
+  </section>
+
+  <!-- ===== Scene 2 · The Memory Floor ===== -->
+  <section class="floor" id="floor" aria-labelledby="floorTitle">
+    <header class="floor-head">
+      <p class="kicker">Step onto</p>
+      <h2 class="chrome-sub" id="floorTitle">The Memory Floor</h2>
+      <p class="floor-count" id="floorCount">&nbsp;</p>
+    </header>
+
+    <div class="tracks" id="tracks"></div>
+    <p class="floor-empty" id="floorEmpty" hidden>The floor is waiting for its first moment. Be the first to share one.</p>
+
+    <div class="floor-cta">
+      <p>Were you there? Your pictures belong on this floor.</p>
+      <a class="btn-chrome" href="../?share=1">Add Your Moment</a>
+      <a class="text-link" href="../">See every photo, message &amp; speech</a>
+    </div>
+  </section>
+</main>
+
+<a class="share-fab" id="shareFab" href="../?share=1" aria-label="Add your moment"><span class="fab-ball" aria-hidden="true"></span><span class="fab-text">Add your moment</span></a>
+
+<!-- ===== Viewer (same window) ===== -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <div class="lb-stage" id="lbStage">
+    <img id="lbImg" alt="">
+    <video id="lbVideo" controls playsinline preload="metadata" hidden></video>
+  </div>
+  <button class="lb-close" id="lbClose">Close</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lb-info">
+    <p class="lb-by">Shared by <b id="lbName"></b></p>
+    <p class="lb-cap" id="lbCap"></p>
+    <div class="lb-tools">
+      <span class="lb-pos" id="lbPos"></span>
+      <a class="lb-save" id="lbSave" download>Save</a>
+      <span class="lb-hint" id="lbHint">Tap the photo for full size</span>
+    </div>
+  </div>
+</div>
+
+<script src="experience.js"></script>
+</body>
+</html>

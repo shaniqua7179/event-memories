@@ -1,0 +1,28 @@
+{
+  "name": "event-memories",
+  "version": "1.0.0",
+  "description": "A reusable, mobile-first event memory platform: guests scan a QR code, relive the event through a living photo wall, and share their own photos, videos, and messages — no app or account needed. Organizers moderate everything from a simple dashboard.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaniqua7179/event-memories.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shaniqua7179/event-memories/issues"
+  },
+  "homepage": "https://github.com/shaniqua7179/event-memories#readme",
+  "devDependencies": {
+    "ffmpeg-static": "^5.3.0",
+    "puppeteer-core": "^23.11.1"
+  }
+}
