@@ -281,6 +281,18 @@
     setTimeout(() => { root.style.setProperty("--boost", "1"); spots.boost(1); }, 1400);
   }
   $("enterBtn").addEventListener("click", enter);
+  // stage tilt: the screen leans gently toward the mouse (desktop only)
+  if (finePointer && !reduceMotion) {
+    const stage = document.querySelector(".pollo-bg");
+    addEventListener("pointermove", (e) => {
+      if (scrollY > innerHeight) return;
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      stage.style.setProperty("--tilt-y", (x * 7).toFixed(2) + "deg");
+      stage.style.setProperty("--tilt-x", (4 - y * 6).toFixed(2) + "deg");
+    }, { passive: true });
+  }
+  // the moment the stage opens: a camera flash
+  setTimeout(() => flash(0.55, "50%", "30%"), 1500);
   document.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", async (e) => {
     const go = el.dataset.go;
     if (go === "floor") { e.preventDefault(); enter(); }
