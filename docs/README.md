@@ -1,5 +1,7 @@
 # Docs
 
+> **2026-09-22 direction change:** the owner decided to **keep the existing application layer** (current Supabase tables, uploads, admin, moderation, security) and focus on the public experience. **Start with [05 · Creative Direction](05-creative-direction.md).** Docs 01–04 describe a possible future backend rebuild and are **parked**; their journeys and performance notes still inform the design.
+
 Read in order:
 
 1. [Architecture](01-architecture.md): the big picture, technology, routes, roles, security, performance, plan limits, and roadmap
