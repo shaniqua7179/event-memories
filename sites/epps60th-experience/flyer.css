@@ -1,0 +1,99 @@
+/* =========================================================================
+   Revision 6 · elements from the original invitation so guests recognize the event:
+   "A Milestone Celebration Honoring / OSCAR D. EPPS, SR.", the gold "DANCING Through the DECADES"
+   lettering, "★ 60th Birthday Celebration ★", the honoree's portrait, gold instruments, disco ball & notes.
+   ========================================================================= */
+:root { --font-formal-script: "Great Vibes", "Parisienne", cursive; }
+.topbar { display: none; }
+
+/* Gold metal like the invitation's lettering */
+.gold-metal, .ft-big, .ft-the, .flyer-60, .honor-kicker span {
+  background: linear-gradient(180deg, #fff3c4 0%, #f3d98a 28%, #c9982f 52%, #f7e3a1 70%, #b8862a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ---------- Honor header (top center) ---------- */
+.honor { position: absolute; z-index: 5; top: max(1rem, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); text-align: center; width: min(92vw, 760px); }
+.honor-kicker { display: flex; align-items: center; justify-content: center; gap: 0.9rem; font-family: var(--font-ui); font-weight: 800; font-size: clamp(0.62rem, 1vw, 0.82rem); letter-spacing: 0.2em; text-transform: uppercase; }
+.honor-kicker::before, .honor-kicker::after { content: ""; flex: 0 1 90px; height: 1px; background: linear-gradient(90deg, transparent, #e8c76b); }
+.honor-kicker::after { background: linear-gradient(90deg, #e8c76b, transparent); }
+.honor-name { font-family: var(--font-caps); font-weight: 700; color: #fff; letter-spacing: 0.06em; font-size: clamp(1.4rem, 2.7vw, 2.4rem); line-height: 1.1; margin-top: 0.2rem; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85), 0 0 22px rgba(255, 255, 255, 0.15); }
+
+/* ---------- Stage screen: a little smaller, below the header ---------- */
+.pollo-bg { top: clamp(5.8rem, 11vh, 7.4rem); width: min(46vw, 900px); }
+.entrance { padding-top: calc(clamp(5.8rem, 11vh, 7.4rem) + min(46vw, 900px) * 0.566 * 0.72); }
+
+/* ---------- The honoree, left of the screen, fading into the dark ---------- */
+.honoree-photo {
+  position: absolute; z-index: 2; left: clamp(0.5rem, 5vw, 6rem); top: clamp(8rem, 18vh, 11rem);
+  width: min(27vw, 460px); height: auto; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 62% 70% at 50% 42%, #000 55%, transparent 78%);
+  mask-image: radial-gradient(ellipse 62% 70% at 50% 42%, #000 55%, transparent 78%);
+  opacity: 0; transform: translateY(20px); transition: opacity 1.4s ease 1.6s, transform 1.4s ease 1.6s;
+}
+.is-in .honoree-photo { opacity: 1; transform: none; }
+
+/* Invitation art at the edges */
+.art-instruments, .art-disco { position: absolute; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 1.6s ease 2s; }
+.is-in .art-instruments, .is-in .art-disco { opacity: 0.9; }
+.art-instruments { left: 0; bottom: 4vh; height: min(78vh, 720px); width: auto;
+  -webkit-mask-image: linear-gradient(90deg, #000 60%, transparent), linear-gradient(to top, transparent, #000 12%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, #000 60%, transparent); }
+.art-disco { right: 0; top: clamp(6rem, 12vh, 8rem); height: min(66vh, 600px); width: auto;
+  -webkit-mask-image: linear-gradient(270deg, #000 55%, transparent); mask-image: linear-gradient(270deg, #000 55%, transparent); }
+.art-disco { animation: sway 7s ease-in-out infinite; transform-origin: 60% 0; }
+@keyframes sway { 50% { transform: rotate(1.4deg); } }
+
+/* ---------- Theme line in the invitation's lettering ---------- */
+.flyer-title { font-family: var(--font-caps); font-weight: 700; line-height: 1; margin-top: 0.1rem; font-size: clamp(1.9rem, 3.6vw, 3.3rem); letter-spacing: 0.02em;
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.45)) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8)); }
+.ft-big { text-transform: uppercase; }
+.ft-through { font-family: var(--font-formal-script); font-weight: 400; font-size: 1.15em; color: #e9edf2; text-transform: none; text-shadow: 0 0 12px rgba(255, 255, 255, 0.35); }
+.ft-the { font-family: var(--font-formal-script); font-weight: 400; font-size: 1.05em; text-transform: none; }
+.flyer-60 { font-family: var(--font-caps); font-weight: 600; font-size: clamp(0.95rem, 1.6vw, 1.35rem); letter-spacing: 0.08em; margin-top: 0.35rem; }
+.flyer-60 span { font-size: 0.8em; }
+.tagline { margin-top: 0.8rem; }
+.decades { display: none; }
+
+/* Don't let side art crowd medium screens */
+@media (max-width: 1100px) { .art-instruments, .art-disco { display: none; } .honoree-photo { width: 24vw; left: 0.5rem; } }
+
+/* ---------- Phones ---------- */
+@media (max-width: 700px) {
+  .honor { top: 0.8rem; }
+  .honor-kicker { font-size: 0.56rem; letter-spacing: 0.14em; gap: 0.5rem; }
+  .honor-kicker::before, .honor-kicker::after { flex-basis: 34px; }
+  .honor-name { font-size: 1.25rem; }
+  .pollo-bg { top: 4.6rem; width: 92vw; }
+  .entrance { padding-top: calc(4.6rem + 92vw * 0.566 + 1.6rem); }
+  /* the honoree as a gold-ringed portrait at the screen's lower-left corner */
+  .honoree-photo {
+    left: 3vw; top: calc(4.6rem + 92vw * 0.566 - 18vw); width: 30vw; aspect-ratio: 1; object-fit: cover; object-position: 50% 12%;
+    border-radius: 50%; -webkit-mask-image: none; mask-image: none;
+    box-shadow: 0 0 0 2px #f3d98a, 0 0 0 5px rgba(5, 5, 7, 0.9), 0 0 24px rgba(243, 217, 138, 0.5), 0 12px 30px rgba(0, 0, 0, 0.7);
+  }
+  .flyer-title { font-size: 2.3rem; line-height: 0.95; }
+  .flyer-title .ft-big { display: block; }
+  .flyer-title .ft-through { display: inline-block; margin: 0.05em 0 0.02em; }
+  .flyer-60 { font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) { .art-disco { animation: none; } .honoree-photo { transition: none; } }
+
+/* ---------- 6b: fixes from screenshot review ---------- */
+/* 1. Center the honor header without transform (the fade-in animation uses transform) */
+.honor { left: 0; right: 0; transform: none; margin: 0 auto; }
+/* 2. Portrait melts into the dark on every edge */
+.honoree-photo {
+  -webkit-mask-image: radial-gradient(ellipse 50% 58% at 50% 42%, #000 42%, transparent 74%);
+  mask-image: radial-gradient(ellipse 50% 58% at 50% 42%, #000 42%, transparent 74%);
+}
+/* 3. Side art fades out on all four edges */
+.art-instruments, .art-disco {
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 40% 50%, #000 50%, transparent 80%);
+  mask-image: radial-gradient(ellipse 60% 55% at 40% 50%, #000 50%, transparent 80%);
+}
+.art-disco { -webkit-mask-image: radial-gradient(ellipse 62% 55% at 62% 45%, #000 50%, transparent 80%); mask-image: radial-gradient(ellipse 62% 55% at 62% 45%, #000 50%, transparent 80%); }
+@media (max-width: 700px) {
+  .honoree-photo { -webkit-mask-image: none; mask-image: none; }
+  .honor { width: 94vw; }
+}

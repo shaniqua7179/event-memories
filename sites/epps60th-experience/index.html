@@ -13,7 +13,7 @@
 <!-- All paths are absolute so this page works both here and as the epps60th.com homepage -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&family=Yellowtail&family=Parisienne&family=Cinzel:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Manrope:wght@400;500;700;800&family=Yellowtail&family=Parisienne&family=Great+Vibes&family=Cinzel:wght@500;600;700&display=swap">
 <link rel="preload" as="image" href="/memories/experience/media/ballroom-desktop.jpg" media="(min-width: 701px)">
 <link rel="preload" as="image" href="/memories/experience/media/ballroom-mobile.jpg" media="(max-width: 700px)">
 <link rel="stylesheet" href="/memories/experience/experience.css">
@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="/memories/experience/revision.css">
 <link rel="stylesheet" href="/memories/experience/ballroom.css">
 <link rel="stylesheet" href="/memories/experience/stage.css">
+<link rel="stylesheet" href="/memories/experience/flyer.css">
 <script src="/memories/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="/memories/core.js"></script>
@@ -59,6 +60,15 @@
 
     <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
 
+    <!-- From the original invitation, so guests know they're in the right place -->
+    <img class="art-instruments" src="/memories/experience/media/instruments.jpg" alt="" aria-hidden="true">
+    <img class="art-disco" src="/memories/experience/media/discoball-notes.jpg" alt="" aria-hidden="true">
+    <img class="honoree-photo" src="/memories/experience/media/honoree.jpg" alt="Pastor Oscar D. Epps, Sr.">
+    <div class="honor reveal" style="--d: 0.3s">
+      <p class="honor-kicker"><span>A Milestone Celebration Honoring</span></p>
+      <p class="honor-name">Oscar D. Epps, Sr.</p>
+    </div>
+
     <header class="topbar reveal" style="--d: 0.4s">
       <a class="mark" href="/"><span class="mark-name">Oscar D. Epps, Sr.</span><span class="mark-sub">60th Birthday Celebration</span></a>
       <nav class="toplinks" aria-label="Sections">
@@ -73,13 +83,13 @@
     <p class="note note-r" aria-hidden="true">Different Decades.<br>Same Joy.</p>
 
     <div class="hero" id="hero">
-      <p class="opener reveal" style="--d: 0.7s">Oh, what a night.</p>
       <p class="join reveal" style="--d: 1.0s">Join the</p>
       <h1 class="script-title" id="heroTitle" aria-label="Join the After Party"><span class="glitter" aria-hidden="true">After Party</span>
         <svg class="swoosh" viewBox="0 0 600 40" aria-hidden="true" preserveAspectRatio="none"><defs><linearGradient id="sw" x1="0" x2="1"><stop offset="0" stop-color="#e9edf2"/><stop offset=".5" stop-color="#ffffff"/><stop offset=".72" stop-color="#f3d98a"/><stop offset="1" stop-color="#c9a13b"/></linearGradient></defs><path d="M8 30 C 160 12, 380 8, 592 18" fill="none" stroke="url(#sw)" stroke-width="3.2" stroke-linecap="round"/></svg>
         <span class="sparkle s1" aria-hidden="true"></span><span class="sparkle s2" aria-hidden="true"></span><span class="sparkle s3" aria-hidden="true"></span><span class="sparkle s4" aria-hidden="true"></span>
       </h1>
-      <p class="decades reveal" style="--d: 2.3s">Dancing Through the Decades</p>
+      <p class="flyer-title reveal" style="--d: 2.2s" aria-label="Dancing Through the Decades"><span class="ft-big">Dancing</span> <span class="ft-through">Through</span> <span class="ft-the">the</span> <span class="ft-big">Decades</span></p>
+      <p class="flyer-60 reveal" style="--d: 2.45s"><span aria-hidden="true">★</span> 60th Birthday Celebration <span aria-hidden="true">★</span></p>
       <p class="tagline reveal" style="--d: 2.6s">The party ended. The memories didn't.</p>
       <div class="hero-actions reveal" style="--d: 3.0s">
         <button class="btn-neon" id="enterBtn">Enter the Experience <span aria-hidden="true">›</span></button>
