@@ -1,0 +1,107 @@
+/* =========================================================================
+   Revision 7 · full-width ballroom video (trimmed at the bottom when too tall),
+   brushed-gold "Join the After Party" button, and a bright, silver Memory Floor.
+   The Pollo.ai watermark (top-right of the video) stays visible.
+   ========================================================================= */
+
+/* ---------- Full-width video, edge to edge, trimmed from the bottom ---------- */
+.pollo-bg {
+  top: 0; left: 0; right: 0; width: 100%; aspect-ratio: auto; height: min(56.6vw, 78vh);
+  transform: none; border-radius: 0; z-index: 1;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent); mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+.pollo-bg::before, .pollo-bg::after { display: none; }
+.pollo-bg video {
+  border-radius: 0; box-shadow: none; -webkit-box-reflect: none;
+  object-fit: cover; object-position: 50% 0; /* keep the top (ball + watermark), trim the bottom */
+  clip-path: none !important; animation: none !important; opacity: 0; transition: opacity 1.6s ease;
+}
+.pollo-bg video.is-playing { opacity: 1 !important; }
+
+/* Header over the top of the video, centered (clear of the top-right corner) */
+.honor { top: max(1.1rem, env(safe-area-inset-top)); width: min(56vw, 760px); }
+.honor-name { text-shadow: 0 2px 18px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.6); }
+
+/* Content starts where the video fades out */
+.entrance { padding-top: calc(min(56.6vw, 78vh) - 3.5rem); padding-bottom: 2.5rem; }
+.hero::before { display: none; }
+.art-instruments, .art-disco { display: none; }
+
+/* The honoree: gold-ringed portrait resting on the lower-left of the video */
+.honoree-photo {
+  left: clamp(1rem, 5vw, 5rem); top: calc(min(56.6vw, 78vh) - clamp(9rem, 15vw, 14rem)); width: clamp(8rem, 13vw, 12.5rem);
+  aspect-ratio: 1; object-fit: cover; object-position: 50% 12%; border-radius: 50%; z-index: 3;
+  -webkit-mask-image: none !important; mask-image: none !important;
+  box-shadow: 0 0 0 3px #f3d98a, 0 0 0 7px rgba(5, 5, 7, 0.9), 0 0 0 8px rgba(243, 217, 138, 0.5), 0 0 36px rgba(243, 217, 138, 0.55), 0 18px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* The invitation lettering is now the page title */
+.flyer-title { font-size: clamp(2.4rem, 5vw, 4.6rem); margin: 0; }
+.flyer-60 { margin-top: 0.5rem; }
+
+/* ---------- Brushed-gold button, black letters ---------- */
+.btn-gold-brush {
+  position: relative; display: inline-flex; align-items: center; gap: 1rem; cursor: pointer; border: 0;
+  padding: 0.85rem 2.2rem 0.85rem 1.6rem; min-height: 76px; border-radius: 10px; color: #0d0b07; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 2px, rgba(0, 0, 0, 0.05) 2px 3px, transparent 3px 6px), /* brushed grain */
+    linear-gradient(180deg, #fff1bd 0%, #f3d98a 22%, #d7ad4a 50%, #b8892c 64%, #e9c86e 86%, #fff0b8 100%);
+  box-shadow: 0 0 0 1px rgba(255, 244, 205, 0.9) inset, 0 0 0 3px rgba(20, 15, 5, 0.85), 0 0 0 4px rgba(243, 217, 138, 0.8),
+              0 0 34px rgba(243, 217, 138, 0.55), 0 16px 34px rgba(0, 0, 0, 0.55);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-gold-brush::after { /* a glint that sweeps across the gold */
+  content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  transform: translateX(-130%); animation: brush-glint 4s ease-in-out infinite 2.4s;
+}
+@keyframes brush-glint { 0%, 70% { transform: translateX(-130%); } 90%, 100% { transform: translateX(130%); } }
+.btn-gold-brush:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 0 0 1px rgba(255, 244, 205, 0.9) inset, 0 0 0 3px rgba(20, 15, 5, 0.85), 0 0 0 4px rgba(243, 217, 138, 0.9), 0 0 50px rgba(243, 217, 138, 0.75), 0 18px 38px rgba(0, 0, 0, 0.55); }
+.btn-gold-brush .toast { width: 42px; height: 36px; flex: none; }
+.bgb-text { display: grid; text-align: left; line-height: 1.1; }
+.bgb-text b { font-family: var(--font-caps); font-weight: 700; font-size: clamp(1.35rem, 2.3vw, 1.9rem); letter-spacing: 0.01em; text-transform: none; }
+.bgb-text small { font-family: var(--font-ui); font-weight: 800; font-size: 0.7rem; letter-spacing: 0.26em; text-transform: uppercase; margin-top: 0.3rem; }
+.hero-actions { align-items: center; }
+.hero-actions .btn-ghost-gold { min-height: 76px; border-radius: 10px; }
+
+/* ---------- A bright, silver Memory Floor ---------- */
+.floor { isolation: isolate; }
+.floor::before { /* stage lighting washing the whole floor */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.34), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 15% 35%, rgba(230, 236, 245, 0.22), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 35%, rgba(255, 244, 220, 0.22), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(220, 226, 236, 0.2), transparent 70%),
+    linear-gradient(180deg, #2a2b31 0%, #3a3c44 45%, #2c2d33 100%);
+}
+.floor::after { /* sweeping silver spotlights */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; mix-blend-mode: screen;
+  background:
+    conic-gradient(from 200deg at 20% -10%, transparent 0deg, rgba(255, 255, 255, 0.16) 8deg, transparent 16deg),
+    conic-gradient(from 140deg at 80% -10%, transparent 0deg, rgba(255, 250, 238, 0.16) 8deg, transparent 16deg);
+  animation: floor-sweep 12s ease-in-out infinite alternate;
+}
+@keyframes floor-sweep { to { transform: translateX(4%) skewX(-3deg); } }
+body.on-floor .room-sparkle.is-playing { opacity: 0.85; }
+body.on-floor .spots { opacity: 1; }
+.floor .chrome-sub { filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.45)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5)); }
+.floor-count { color: rgba(255, 255, 255, 0.9); }
+.floor-hint { color: rgba(255, 255, 255, 0.7); }
+.track.back { --track-o: 0.92; filter: brightness(0.95); }
+.tile { box-shadow: 0 0 0 2px rgba(235, 238, 244, 0.85), 0 0 0 4px rgba(255, 255, 255, 0.12), 0 18px 40px rgba(0, 0, 0, 0.4); }
+.floor-cta p { color: #fff; }
+
+/* ---------- Phones ---------- */
+@media (max-width: 700px) {
+  .pollo-bg { height: 56.6vw; top: 0; width: 100%; }
+  .pollo-bg video { object-fit: cover; }
+  .honor { top: calc(56.6vw + 0.6rem); width: 94vw; }
+  .entrance { padding-top: calc(56.6vw + 6rem); }
+  .honoree-photo { left: 4vw; top: calc(56.6vw - 20vw); width: 28vw; }
+  .flyer-title { font-size: 2.3rem; }
+  .btn-gold-brush { width: min(100%, 22rem); justify-content: center; padding: 0.8rem 1.2rem; }
+  .bgb-text b { font-size: 1.3rem; }
+  .bgb-text small { font-size: 0.6rem; letter-spacing: 0.18em; }
+  .hero-actions .btn-ghost-gold { min-height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) { .btn-gold-brush::after, .floor::after { animation: none; } }
